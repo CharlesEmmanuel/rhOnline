@@ -1,5 +1,3 @@
-import time
-
 import cv2
 import os
 # import sqlite3
@@ -42,6 +40,7 @@ class FaceRecognition:
 
             ret, img = cam.read()
             # img = cv2.flip(img, -1) # flip video image vertically
+
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             faces = detector.detectMultiScale(gray, 1.3, 5)
 
@@ -50,15 +49,15 @@ class FaceRecognition:
                 count += 1
 
                 # Save the captured image into the datasets folder
-                cv2.imwrite(BASE_DIR + '/employe/dataset/User.' + str(face_id) + '.' + str(count) + ".jpg",
+                cv2.imwrite(BASE_DIR + '/employe/dataset/Employe.' + str(face_id) + '.' + str(count) + ".jpg",
                             gray[y:y + h, x:x + w])
 
                 cv2.imshow('Register Face', img)
 
             k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
-            if k == 5:
+            if k == 27:
                 break
-            elif count >= 7:  # Take 30 face sample and stop video
+            elif count >= 30:  # Take 30 face sample and stop video
                 break
 
         cam.release()
@@ -91,7 +90,11 @@ class FaceRecognition:
 
         print("\n Training faces. It will take a few seconds. Wait ...")
         faces, ids = getImagesAndLabels(path)
-        recognizer.train(faces, np.array(ids))
+
+        try:
+            recognizer.train(faces, np.array(ids))
+        except:
+            return "No traitement"
 
         # Save the model into trainer/trainer.yml
         recognizer.save(BASE_DIR + '/employe/trainer/trainer.yml')  # recognizer.save() worked on Mac, but not on Pi
@@ -151,7 +154,7 @@ class FaceRecognition:
             cv2.imshow('Detect Face', img)
 
             k = cv2.waitKey(10) & 0xff  # Press 'ESC' for exiting video
-            if k == 5:
+            if k == 27:
                 break
             if confidence > 50:
                 break
