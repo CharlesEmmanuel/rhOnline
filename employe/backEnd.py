@@ -56,9 +56,9 @@ class FaceRecognition:
                 cv2.imshow('Register Face', img)
 
             k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
-            if k == 5:
+            if k == 20:
                 break
-            elif count >= 7:  # Take 30 face sample and stop video
+            elif count >= 32:  # Take 30 face sample and stop video
                 break
 
         cam.release()
@@ -151,7 +151,7 @@ class FaceRecognition:
             cv2.imshow('Detect Face', img)
 
             k = cv2.waitKey(10) & 0xff  # Press 'ESC' for exiting video
-            if k == 5:
+            if k == 20:
                 break
             if confidence > 50:
                 break
