@@ -34,38 +34,32 @@ class FaceRecognition:
         #     print("\n ERROR! This id alreeady exists in database!")
         #     print("\n Try agian with new id\n")
         #     exit()
-        cam = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+        cam = cv2.VideoCapture(0)
 
-
-        max_attempts = 50
         count = 0
+
         while (True):
 
             ret, img = cam.read()
+            # img = cv2.flip(img, -1) # flip video image vertically
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = detector.detectMultiScale(gray, 1.3, 5)
 
-            cv2.imshow('my frame', img)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            for (x, y, w, h) in faces:
+                cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                count += 1
+
+                # Save the captured image into the datasets folder
+                cv2.imwrite(BASE_DIR + '/employe/dataset/User.' + str(face_id) + '.' + str(count) + ".jpg",
+                            gray[y:y + h, x:x + w])
+
+                cv2.imshow('Register Face', img)
+
+            k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
+            if k == 5:
                 break
-
-            # print(ret, img)
-            # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            # faces = detector.detectMultiScale(gray, 1.3, 5)
-            # for (x, y, w, h) in faces:
-            #     cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-            #     count += 1
-            #
-            #     # Save the captured image into the datasets folder
-            #     cv2.imwrite(BASE_DIR + '/employe/dataset/Employe.' + str(face_id) + '.' + str(count) + ".jpg",
-            #                 gray[y:y + h, x:x + w])
-            #
-            #     cv2.imshow('Register Face', img)
-            #
-            # k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
-            # if k == 27:
-            #     break
-            # elif count >= 5:  # Take 30 face sample and stop video
-            #     break
-
+            elif count >= 7:  # Take 30 face sample and stop video
+                break
 
         cam.release()
         cv2.destroyAllWindows()
@@ -97,7 +91,6 @@ class FaceRecognition:
 
         print("\n Training faces. It will take a few seconds. Wait ...")
         faces, ids = getImagesAndLabels(path)
-
         recognizer.train(faces, np.array(ids))
 
         # Save the model into trainer/trainer.yml
@@ -158,7 +151,7 @@ class FaceRecognition:
             cv2.imshow('Detect Face', img)
 
             k = cv2.waitKey(10) & 0xff  # Press 'ESC' for exiting video
-            if k == 27:
+            if k == 5:
                 break
             if confidence > 50:
                 break

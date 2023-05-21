@@ -205,9 +205,9 @@ class EmployeCreateView(CreateView):
     template_name = 'employe/ajouter_employe.html'
 
     context = {
-        'departements': Departement.objects.filter(soft_deleting=False),
-        'lieuemp': LieuEmploi.objects.filter(soft_deleting=False),
-        'postes': Poste.objects.filter(soft_deleting=False),
+        'departements': Departement.objects.all(),
+        'lieuemp': LieuEmploi.objects.all(),
+        'postes': Poste.objects.all(),
     }
 
     # def get_context_data(self, **kwargs):

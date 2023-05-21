@@ -56,6 +56,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mysite.urls'
+AUTH_USER_MODEL = 'employe.Account'
+
 
 TEMPLATES = [
     {
