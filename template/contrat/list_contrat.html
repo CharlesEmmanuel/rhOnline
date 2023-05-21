@@ -1,0 +1,125 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static '' %}assets/css/passwordeye.css">
+
+<link rel="stylesheet" href="{% static '' %}assets/modules/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="{% static '' %}assets/modules/jquery-selectric/selectric.css">
+<link rel="stylesheet" href="{% static '' %}assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
+
+<!-- CSS Libraries -->
+
+<link rel="stylesheet" href="{% static '' %}assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
+
+{% endblock %}
+{% block body %}
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>CONTRATS de {{listing.name}} {{listing.prenom}} </h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">Modules</a></div>
+                <div class="breadcrumb-item">DataTables</div>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages%}
+        <div class="alert alert-{{message.tags}}">{{message}}.</div>
+        {%endfor%}
+        {% endif %}
+
+        <div class="section-body">
+            <div class="row">
+
+                <div class="col-12 col-12">
+
+                    {% for showcontrat in showcontrats %}
+                    <div class="card">
+
+                        <div class="card-body">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>
+                                        {% if showcontrat.typecontrat == 'STG' %}
+                                        Stage
+                                        {% elif showcontrat.typecontrat == 'CDD' %}
+                                        Contrat à durée déterminé
+                                        {% elif showcontrat.typecontrat == 'CDI' %}
+                                        Contrat à durée indéterminé
+                                        {% endif %}
+                                    </h4>
+                                    <div class="card-header-action">
+                                        <a data-collapse="#mycard-collapse-{{showcontrat.id}}"
+                                           class="btn btn-icon btn-info"
+                                           href="#"><i class="fas fa-minus"></i></a>
+                                    </div> &nbsp;
+                                    <div class="dropdown">
+                                        <a href="#" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Options</a>
+                                        <div class="dropdown-menu">
+                                            <a href="{% url 'contrat_edit' showcontrat.id %}" class="dropdown-item has-icon"><i class="far fa-edit"></i>
+                                                Edit</a>
+                                            <a href="{% url 'contrat_del' showcontrat.id %}" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="collapse show" id="mycard-collapse-{{showcontrat.id}}">
+                                    <div class="card-body">
+                                        <p>
+                                            Date de debut : {{ showcontrat.datedebut|date:'d M Y' }}
+                                        </p> <br>
+                                        <p>
+                                            Date de debut : {{ showcontrat.datefin|date:'d M Y' }}
+                                        </p><br>
+                                        <p>
+                                            Durée du contrat : {{ showcontrat.Calculduree }}
+                                        </p>
+                                    </div>
+
+                                    <div class="card-footer">
+                                        <p>Mission :</p>
+
+                                        <blockquote class="blockquote">
+                                            <i class="fas fa-quote-left fa-xs text-primary"></i>
+                                            <span class="mb-0"> {{ showcontrat.mission }} </span>
+                                            <i class="fas fa-quote-right fa-xs text-primary"></i>
+                                        </blockquote>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{%block foot%}
+
+
+<script src="{% static '' %}assets/modules/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- Page Specific JS File -->
+
+<script src="{% static '' %}assets/modules/select2/dist/js/select2.full.min.js"></script>
+
+<!--<script src="{% static '' %}assets/modules/cleave-js/dist/cleave.min.js"></script>-->
+<script src="{% static '' %}js/page/forms-advanced-forms.js"></script>
+
+<!-- JS Libraies -->
+
+
+<!-- Page Specific JS File -->
+
+{%endblock%}

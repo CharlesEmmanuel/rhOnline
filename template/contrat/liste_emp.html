@@ -1,0 +1,121 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block head %}
+
+<!-- CSS Libraries -->
+<link rel="stylesheet" href="{% static '' %}assets/modules/datatables/datatables.min.css">
+<link rel="stylesheet"
+      href="{% static '' %}assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{% static '' %}assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
+
+<link rel="stylesheet" href="{% static '' %}assets/modules/izitoast/css/iziToast.min.css">
+
+{% endblock %}
+{% block body %}
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>CONTRATS</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">Modules</a></div>
+                <div class="breadcrumb-item">DataTables</div>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages%}
+        <div class="alert alert-{{message.tags}}">{{message}}.</div>
+        {%endfor%}
+        {% endif %}
+
+        <div class="section-body">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Liste Des Employés</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped v_center" id="table-2">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            <div class="custom-checkbox custom-control">
+                                                <input type="checkbox" data-checkboxes="mygroup"
+                                                       data-checkbox-role="dad" class="custom-control-input"
+                                                       id="checkbox-all">
+                                                <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
+                                            </div>
+                                        </th>
+                                        <th class="text-center">Nom</th>
+                                        <th class="text-center">Email</th>
+                                        <th class="text-center">Adresse</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i in listing %}
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-checkbox custom-control">
+                                                <input type="checkbox" data-checkboxes="mygroup"
+                                                       class="custom-control-input" id="checkbox-{{i.id}}">
+                                                <label for="checkbox-{{i.id}}"
+                                                       class="custom-control-label">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ i.name }} {{ i.prenom }}</td>
+                                        <td class="text-center">{{ i.emailemp }}</td>
+                                        <td class="text-center">{{ i.adress }}</td>
+
+                                        <td class="text-center">
+                                            <a href="{% url 'contrat_ajout' i.id %}" class="btn btn-success"
+                                               title="Ajouter Contrat"><i class="far fa-plus-square"></i></a>
+
+                                            {% if i.listcontrats > 0 %}
+                                            <a href="{% url 'contrat_show' i.id %}" class="btn btn-primary"
+                                               title="Liste Contrats">
+                                                <i class="fas fa-file-contract"></i>
+                                                <span class="badge badge-transparent">{{i.listcontrats}}</span>
+                                            </a>
+                                            {% else %}
+                                            <a href="#"
+                                               class="btn btn-primary disabled" title="Liste Contrats"> <i
+                                                    class="fas fa-file-contract"></i> </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{%block foot%}
+<script src="{% static '' %}assets/modules/datatables/datatables.min.js"></script>
+<script src="{% static '' %}assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script src="{% static '' %}assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js"></script>
+<script src="{% static '' %}assets/modules/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- Page Specific JS File -->
+<script src="{% static '' %}js/page/modules-datatables.js"></script>
+
+<!-- JS Libraies -->
+<script src="{% static '' %}assets/modules/izitoast/js/iziToast.min.js"></script>
+
+<!-- Page Specific JS File -->
+<!--<script src="{% static '' %}js/page/modules-toastr.js"></script>-->
+
+{%endblock%}
