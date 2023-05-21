@@ -26,5 +26,6 @@ urlpatterns = [
         path('contrat/', include('contrat.urls')),
         path('conges/', include('conges.urls')),
         path('sinistre/', include('sinistre.urls')),
+        path('presence/', include('presence.urls')),
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

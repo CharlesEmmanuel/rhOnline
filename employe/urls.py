@@ -34,7 +34,4 @@ urlpatterns = [
     path('edit/<int:pk>', edit_employe, name='edit_employe'),
 
 
-
-
-
 ]
