@@ -9,9 +9,8 @@ urlpatterns = [
     path('liste/emp', liste_empl, name='conges_liste_emp'),
     path('add/<int:pk>', add_conges, name='conges_ajout'), # Ajout de conges à un employé
     path('list/<int:pk>', show_conges, name='conges_show'), # Liste des conges d'un employé
-    
-    path('submit/<int:pk>', submit_conges, name='soumettre_conges'), # Soumettre demande de congés
 
+    path('submit/<int:pk>', submit_conges, name='soumettre_conges'), # Soumettre demande de congés
 
     path('edit/<int:pk>', edit_conges, name='conges_edit'), # Modification conges d'un employé
     path('delete/<int:pk>', del_conges, name='conges_del'), # Suppression conges d'un employé

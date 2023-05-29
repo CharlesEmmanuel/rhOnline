@@ -7,10 +7,12 @@ from django.urls import reverse
 from conges.forms import TypecongesForm
 from conges.models import Conges, Typeconges
 from employe.models import Employe
+from django.contrib.auth.decorators import login_required
 
 
 # Class Parametres des type de congés
 
+@login_required(login_url="login")
 def ajout_tconges(request):
     if request.method == 'POST':
         forms = TypecongesForm(request.POST)
@@ -33,6 +35,7 @@ def ajout_tconges(request):
     return render(request, 'typeconges/liste_typeconges.html', context)
 #
 
+@login_required(login_url="login")
 def delete_tconges(request, pk):
     try:
         typeconges = Typeconges.objects.get(id=pk)
@@ -45,6 +48,7 @@ def delete_tconges(request, pk):
     return redirect('add_tconges')
 
 
+@login_required(login_url="login")
 def edit_tconges(request, pk):
     typeconges = Typeconges.objects.get(id=pk)
     if request.method == 'POST':
@@ -72,6 +76,7 @@ def edit_tconges(request, pk):
 
 # Class d'ajout de congés
 
+@login_required(login_url="login")
 def liste_empl(request):
     employe_list = Employe.objects.filter(soft_deleting=False)
 
@@ -81,6 +86,7 @@ def liste_empl(request):
     return render(request, 'conges/liste_emp.html', context)
 
 
+@login_required(login_url="login")
 def add_conges(request, pk):
     try:
         employe = Employe.objects.get(id=pk)
@@ -129,6 +135,7 @@ def add_conges(request, pk):
         return render(request, 'conges/ajouter_conges.html', context)
 
 
+@login_required(login_url="login")
 def show_conges(request, pk):
     employe = Employe.objects.get(id=pk)
 
@@ -144,6 +151,7 @@ def show_conges(request, pk):
 
 
 
+@login_required(login_url="login")
 def submit_conges(request, pk):
     try:
         conges = Conges.objects.get(id=pk)
@@ -186,6 +194,7 @@ def submit_conges(request, pk):
 
 
 
+@login_required(login_url="login")
 def edit_conges(request, pk):
     try:
         conges = Conges.objects.get(id=pk)
@@ -235,6 +244,7 @@ def edit_conges(request, pk):
         return render(request, 'conges/edit_conges.html', context)
 
 
+@login_required(login_url="login")
 def del_conges(request, pk):
         try:
             conges = Conges.objects.get(id=pk)

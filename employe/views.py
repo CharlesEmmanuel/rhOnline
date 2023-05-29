@@ -7,10 +7,14 @@ from datetime import datetime
 from employe.models import Departement, Poste, LieuEmploi, Employe, Account
 
 from employe.backEnd import FaceRecognition
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 facerecognition = FaceRecognition()
 
 # Create your views here.
+
+@login_required(login_url="login")
 def liste_departement(request):
     # print(request.name) A FAIRE UNE VERIFICATION DES INFORMATIONS ENTREES PAS L'UTILISATEUR ( CHAMPS VIDES )
     # breakpoint()
@@ -35,6 +39,7 @@ def liste_departement(request):
     return render(request, 'departement/liste_departement.html', context)
 
 
+@login_required(login_url="login")
 def delete_departement(request, pk):
     try:
         departement = Departement.objects.get(id=pk)
@@ -48,6 +53,7 @@ def delete_departement(request, pk):
     return redirect('liste_departement')
 
 
+@login_required(login_url="login")
 def edit_departement(request, pk):
     departement = Departement.objects.get(id=pk)
     if request.method == 'POST':
@@ -71,6 +77,7 @@ def edit_departement(request, pk):
         return render(request, 'departement/liste_departement.html', context)
 
 
+@login_required(login_url="login")
 def liste_poste(request):
     if request.method == 'POST':
         forms = PosteForm(request.POST)
@@ -93,6 +100,7 @@ def liste_poste(request):
     return render(request, 'poste/liste_poste.html', context)
 
 
+@login_required(login_url="login")
 def delete_poste(request, pk):
     try:
         poste = Poste.objects.get(id=pk)
@@ -106,6 +114,7 @@ def delete_poste(request, pk):
     return redirect('liste_poste')
 
 
+@login_required(login_url="login")
 def edit_poste(request, pk):
     poste = Poste.objects.get(id=pk)
     if request.method == 'POST':
@@ -129,6 +138,7 @@ def edit_poste(request, pk):
         return render(request, 'poste/liste_poste.html', context)
 
 
+@login_required(login_url="login")
 def liste_liemploi(request):
     if request.method == 'POST':
         forms = LiemploiForm(request.POST)
@@ -151,6 +161,7 @@ def liste_liemploi(request):
     return render(request, 'lieuemploi/liste_lieuemploi.html', context)
 
 
+@login_required(login_url="login")
 def delete_liemploi(request, pk):
     try:
         liemploi = LieuEmploi.objects.get(id=pk)
@@ -164,6 +175,7 @@ def delete_liemploi(request, pk):
     return redirect('liste_liemploi')
 
 
+@login_required(login_url="login")
 def edit_liemploi(request, pk):
     liemploi = LieuEmploi.objects.get(id=pk)
     if request.method == 'POST':
@@ -188,19 +200,8 @@ def edit_liemploi(request, pk):
 
 
 
-# class EmployeInline():
-#     form_class = EmployeForm
-#     model = Employe
-#     template_name = 'employe/ajouter_employe.html'
-#
-#     def form_valid(self, form):
-#         self.object = form.save()
-#
-#         return redirect('liste_employe')
-#
-
+@method_decorator(login_required(login_url="login"), name='get')
 class EmployeCreateView(CreateView):
-    # form_class = EmployeForm
     list_em = Employe.objects.filter(soft_deleting=False)
     template_name = 'employe/ajouter_employe.html'
 
@@ -210,12 +211,10 @@ class EmployeCreateView(CreateView):
         'postes': Poste.objects.all(),
     }
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(EmployeCreateView, self).get_context_data(**kwargs)
-    #     return context
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self.context)
+
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -252,15 +251,10 @@ class EmployeCreateView(CreateView):
             nbreenf = request.POST['enfants']
             numurgence = request.POST['casurgence']
 
-            account = Account()
+
             employe = Employe()
 
-            account.first_name = nom
-            account.last_name = prenom
-            account.email = email
-            account.user_type = user_type
-            account.password = passwd
-            account.save()
+            account = Account.objects.create_user(nom,prenom,email,user_type=user_type,password=passwd)
 
             employe.faceid = account.pk
 
@@ -285,6 +279,7 @@ class EmployeCreateView(CreateView):
             addFace(employe.faceid)
 
 # Fonction listing des employes
+@login_required(login_url="login")
 def liste_emp(request):
     employe_list = Employe.objects.filter(soft_deleting=False)
     context = {
@@ -294,6 +289,7 @@ def liste_emp(request):
 
 
 # Fonction Suppression d'employé
+@login_required(login_url="login")
 def delete_employe(request, pk):
     try:
         employe = Employe.objects.get(id=pk)
@@ -309,6 +305,7 @@ def delete_employe(request, pk):
     messages.success(request, "Employé Supprimé")
     return redirect('liste_employe')
 
+@login_required(login_url="login")
 def edit_employe(request, pk):
     try:
         employe = Employe.objects.get(id=pk)
@@ -384,6 +381,7 @@ def edit_employe(request, pk):
 
 
 
+@login_required(login_url="login")
 def addFace(face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)
@@ -391,6 +389,7 @@ def addFace(face_id):
     return redirect('/')
 
 
+@login_required(login_url="login")
 def scanFace(request,face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)

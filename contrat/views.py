@@ -8,8 +8,10 @@ from django.urls import reverse
 
 from employe.models import Employe
 from contrat.models import Contrat
+from django.contrib.auth.decorators import login_required
 
 
+@login_required(login_url="login")
 def liste_empl(request):
     employe_list = Employe.objects.filter(soft_deleting=False)
     context = {
@@ -18,6 +20,7 @@ def liste_empl(request):
     return render(request, 'contrat/liste_emp.html', context)
 
 
+@login_required(login_url="login")
 def add_contrat(request, pk):
     try:
         employe = Employe.objects.get(id=pk)
@@ -62,6 +65,7 @@ def add_contrat(request, pk):
         }
         return render(request, 'contrat/ajouter_contrat.html', context)
 
+@login_required(login_url="login")
 def show_contrat(request, pk):
     employe = Employe.objects.get(id=pk)
 
@@ -78,6 +82,7 @@ def show_contrat(request, pk):
         return redirect('contrat_liste_emp')
 
 
+@login_required(login_url="login")
 def edit_contrat(request, pk):
     try:
         contrat = Contrat.objects.get(id=pk)
@@ -125,6 +130,7 @@ def edit_contrat(request, pk):
 
 
 
+@login_required(login_url="login")
 def del_contrat(request, pk):
         try:
             contrat = Contrat.objects.get(id=pk)

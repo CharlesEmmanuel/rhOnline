@@ -31,7 +31,7 @@ class LieuEmploi(models.Model):
         return self.name
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self,first_name,last_name,email,password=None):
+    def create_user(self,first_name,last_name,email,user_type,password=None):
         if not email:
             raise ValueError("l'utilisateur doit avoir une adresse email")
 
@@ -39,6 +39,7 @@ class MyAccountManager(BaseUserManager):
             email = self.normalize_email(email),
             first_name = first_name,
             last_name = last_name,
+            user_type = user_type,
         )
         user.set_password(password)
         user.save(using = self._db)
@@ -74,7 +75,7 @@ class Account(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_superadmin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'

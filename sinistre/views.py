@@ -5,6 +5,7 @@ from django.contrib import messages
 from datetime import datetime
 from employe.models import Employe
 from sinistre.models import Sinistre
+from django.contrib.auth.decorators import login_required
 
 
 def liste_empl(request):

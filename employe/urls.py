@@ -33,5 +33,4 @@ urlpatterns = [
     path('delete/<int:pk>', delete_employe, name='delete_employe'),
     path('edit/<int:pk>', edit_employe, name='edit_employe'),
 
-
 ]
