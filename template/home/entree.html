@@ -1,0 +1,47 @@
+{% extends 'panel/base2.html' %}
+{% load static %}
+
+{% block head %}
+
+<title>Home Page</title>
+
+{% endblock %}
+{% block body %}
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="login-brand">
+                    <img src="http://puffintheme.com/craft/codiepie/dist/assets/img/CodiePie-fill.svg" alt="logo"
+                         width="100" class="shadow-light rounded-circle">
+                </div>
+                <div class="card-deck">
+                    <div class="card border border-dark">
+                        <a href="#">
+                            <img class="card-img-top" src="{% static '' %}assets/img/door-open-solid.svg" alt="Card image cap">
+                        </a>
+
+                    </div>
+                    <div class="card border border-dark">
+                        <a href="#">
+                            <img class="card-img-top" src="{% static '' %}assets/img/door-open-solid.svg" alt="Card image cap">
+                        </a>
+
+                    </div>
+                </div>
+                <div class="mt-5 text-muted text-center">
+                    Avez vous un compte ? <a href="{% url 'login' %}">Connectez-vous !</a>
+                </div>
+                <div class="simple-footer">
+                    Copyright &copy; RhOnline 2023
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{%block foot%}
+
+{%endblock%}
