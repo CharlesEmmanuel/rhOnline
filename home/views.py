@@ -39,5 +39,14 @@ def login_user(request):
     return render(request, 'home/login.html')
 
 
+<<<<<<< HEAD
 def pointage_page(request):
     return render(request, 'home/pointage.html')
+=======
+def home_page(request):
+    return render(request, 'home/home.html')
+
+
+def entry(request):
+    return render(request, 'home/entree.html')
+>>>>>>> 68304463259f30b7e2cd203ff40043a03920acd2
