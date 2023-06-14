@@ -3,8 +3,6 @@
 
 {% block head %}
 
-<link rel="stylesheet" href="{% static '' %}assets/css/passwordeye.css">
-
 <link rel="stylesheet" href="{% static '' %}assets/modules/select2/dist/css/select2.min.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/jquery-selectric/selectric.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
@@ -37,7 +35,7 @@
             <div class="row">
 
                 <div class="col-12 col-12">
-                    <form class="needs-validation" novalidate="" method="POST" name="liemploi">
+                    <form class="needs-validation" novalidate="" method="POST">
                         {% csrf_token %}
 
                         <div class="card">
@@ -47,27 +45,15 @@
                                 </h2>
                             </div>
                             <div class="card-body">
+
                                 <div class="row">
                                     <div class="form-group col-lg-12 col-sm-12">
-                                        <label>Type de Contrat</label>
-                                        <select class="form-control select2" name="contratype">
-
-                                            {% if showcontrats.typecontrat == "STG" %}
-                                            <option value="STG" selected="selected">Stage</option>
-                                            <option value="CDD">Contrat à durée déterminé(CDD)</option>
-                                            <option value="CDI">Contrat à durée indéterminé(CDI)</option>
-
-                                            {% elif showcontrats.typecontrat == "CDD"  %}
-                                            <option value="STG">Stage</option>
-                                            <option value="CDD" selected="selected">Contrat à durée déterminé(CDD)</option>
-                                            <option value="CDI">Contrat à durée indéterminé(CDI)</option>
-
-                                            {% else %}
-                                            <option value="STG">Stage</option>
-                                            <option value="CDD">Contrat à durée déterminé(CDD)</option>
-                                            <option value="CDI" selected="selected">Contrat à durée indéterminé(CDI)</option>
-                                            {% endif %}
-
+                                        <label>Type de Congés</label>
+                                        <select class="form-control select2" name="congesype">
+                                            {% for typeconge in typeconges %}
+                                            <option value="{{ typeconge.id }}" {% if showconges.typeconges.id == typeconge.id %} selected
+                                           {%endif%} > {{ typeconge.name }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -75,13 +61,12 @@
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>Date de Debut</label>
-                                        <input type="date" class="form-control" name="debutcontrat" value="{{ showcontrats.datedebut|date:'Y-m-d' }}">
+                                        <input type="date" class="form-control" name="debutconges" value="{{ showconges.datedebut|date:'Y-m-d' }}">
                                     </div>
 
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>Date de Fin</label>
-                                        <input type="date" class="form-control" name="fincontrat" value="{{ showcontrats.datefin|date:'Y-m-d' }}">
-
+                                        <input type="date" class="form-control" name="finconges" value="{{ showconges.datefin|date:'Y-m-d' }}">
                                     </div>
                                 </div>
 
@@ -89,27 +74,14 @@
 
                                 <div class="row">
                                     <div class="form-group col-lg-12 col-sm-12">
-                                        <label>Salaire</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                    FCFA
-                                                </div>
-                                            </div>
-                                            <input type="text" class="form-control" name="paye" value="{{ showcontrats.salaire }}">
-                                        </div>
+                                        <label for="miss">Description</label>
+                                        <textarea class="form-control" id="miss" name="explain"
+                                                  style="height:250px; font-family: Verdana, Arial, Tahoma, Serif; font-size:20px;">{{showconges.description}}</textarea>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="form-group col-lg-12 col-sm-12">
-                                        <label for="miss">Mission</label>
-                                        <textarea class="form-control" id="miss"  name="role" style="height:250px;" >{{ showcontrats.mission }}</textarea>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block">Enregistrer
+                                <div class="form-group d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block col-6">Modifier
 
                                     </button>
                                 </div>

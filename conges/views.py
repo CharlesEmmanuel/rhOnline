@@ -1,4 +1,3 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from django.contrib import messages
@@ -37,6 +36,7 @@ def ajout_tconges(request):
 
 @login_required(login_url="login")
 def delete_tconges(request, pk):
+    global typeconges
     try:
         typeconges = Typeconges.objects.get(id=pk)
 
@@ -113,7 +113,7 @@ def add_conges(request, pk):
             conges = Conges()
 
             conges.typeconges_id = typecong
-            conges.desciption = description
+            conges.description = description
             conges.etatconges = state
 
             conges.datedebut = datedebut
@@ -135,7 +135,7 @@ def add_conges(request, pk):
         return render(request, 'conges/ajouter_conges.html', context)
 
 
-@login_required(login_url="login")
+# @login_required(login_url="login")
 def show_conges(request, pk):
     employe = Employe.objects.get(id=pk)
 
@@ -179,21 +179,6 @@ def submit_conges(request, pk):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @login_required(login_url="login")
 def edit_conges(request, pk):
     try:
@@ -215,15 +200,9 @@ def edit_conges(request, pk):
             datefin = request.POST['finconges']
             description = request.POST['explain']
 
-            state = 'NEW'
-
-            # Calcul de la durée de conges
-
-            conges = Conges()
 
             conges.typeconges_id = typecong
-            conges.desciption = description
-            conges.etatconges = state
+            conges.description = description
 
             conges.datedebut = datedebut
             conges.datefin = datefin
@@ -231,17 +210,49 @@ def edit_conges(request, pk):
 
             conges.save()
 
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
+            idemp = employe.pk
 
-        messages.success(request, "Modification Effectuée", "success")
-        return redirect('liste_employe')
+            messages.success(request, "Modification Effectuée", "success")
+            return redirect(reverse('conges_show', args=[idemp]))
+
     else:
         context = {
+            'typeconges': Typeconges.objects.all(),
             'listing': employe,
             'showconges': conges,
         }
         return render(request, 'conges/edit_conges.html', context)
+
+
+def valider_conges(request, pk):
+    try:
+        conges = Conges.objects.get(id=pk)
+
+    except conges.DoesNotExist:
+        messages.success(request, "conges n'existe pas")
+
+    conges.etatconges = 'VAL'
+    conges.save()
+    messages.success(request, "Congé Accordé")
+
+    employe = Employe.objects.get(id=conges.employe_id)
+    idemp = employe.pk
+    return redirect(reverse('conges_show', args=[idemp]))
+
+def undo_conges(request, pk):
+    try:
+        conges = Conges.objects.get(id=pk)
+
+    except conges.DoesNotExist:
+        messages.success(request, "conges n'existe pas")
+
+    conges.etatconges = 'REJ'
+    conges.save()
+    messages.error(request, "Demande Rejeté", "danger")
+
+    employe = Employe.objects.get(id=conges.employe_id)
+    idemp = employe.pk
+    return redirect(reverse('conges_show', args=[idemp]))
 
 
 @login_required(login_url="login")
@@ -254,6 +265,8 @@ def del_conges(request, pk):
 
         conges.soft_deleting = True
         conges.save()
-        messages.success(request, "conges Supprimé")
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
+        messages.error(request, "conges Supprimé", "danger")
+
+        employe = Employe.objects.get(id=conges.employe_id)
+        idemp = employe.pk
+        return redirect(reverse('conges_show', args=[idemp]))

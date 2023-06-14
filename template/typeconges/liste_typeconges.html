@@ -36,7 +36,7 @@
 
                 <div class="col-12">
                     <div class="card">
-                        <form class="needs-validation" novalidate="" method="POST" name="poste">
+                        <form class="needs-validation" novalidate="" method="POST">
                             {% csrf_token %}
                             <div class="card-header">
                                 <h4>Enregistrement Type de congé</h4>
@@ -45,7 +45,7 @@
                                 {{ forms.as_p }}
                             </div>
                             <div class="card-footer text-center">
-                                <button class="btn btn-primary">Submit</button>
+                                <button class="btn btn-primary">Enregistrer</button>
                             </div>
                         </form>
                     </div>

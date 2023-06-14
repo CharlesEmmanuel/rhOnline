@@ -2,10 +2,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from django.contrib import messages
-from datetime import datetime
-from employe.models import Employe
+
+from sinistre.models import Employe
 from sinistre.models import Sinistre
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
 
 
 def liste_empl(request):
@@ -38,7 +38,7 @@ def add_sinistre(request, pk):
 
             # Calcul de la durée de sinistre
 
-            sinistre = sinistre()
+            sinistre = Sinistre()
 
             sinistre.typesinistre = typesinistre
             sinistre.mission = missionemp
@@ -64,7 +64,7 @@ def add_sinistre(request, pk):
 def show_sinistre(request, pk):
     employe = Employe.objects.get(id=pk)
 
-    sinistre = sinistre.objects.filter(employe_id=employe.pk, soft_deleting=False)
+    sinistre = Sinistre.objects.filter(employe_id=employe.pk, soft_deleting=False)
     # peut-être une verification pour rediriger l'utilisateur sur la page de liste des employés au cas ou celui ci n'a pas de sinistre
 
     # typsinistre = typesinistre(sinistre)
@@ -77,7 +77,7 @@ def show_sinistre(request, pk):
 
 def edit_sinistre(request, pk):
     try:
-        sinistre = sinistre.objects.get(id=pk)
+        sinistre = Sinistre.objects.get(id=pk)
         employe = Employe.objects.get(id=sinistre.employe_id)
 
     except sinistre.DoesNotExist:
@@ -123,7 +123,7 @@ def edit_sinistre(request, pk):
 
 def del_sinistre(request, pk):
         try:
-            sinistre = sinistre.objects.get(id=pk)
+            sinistre = Sinistre.objects.get(id=pk)
 
         except sinistre.DoesNotExist:
             messages.success(request, "sinistre n'existe pas")

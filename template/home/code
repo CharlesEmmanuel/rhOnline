@@ -1,0 +1,15 @@
+<div class="container-fluid">
+    <div class="row">
+        <label for="password" class="control-label">Mot de Passe</label>
+        <div class="input-group">
+
+            <input type="password" name="motdepass" id="password"
+                   class="form-control"/>
+            <div class="input-group-prepend" id="">
+                <div class="input-group-text" id="togglePassword">
+                    <i class="fa fa-eye-slash"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

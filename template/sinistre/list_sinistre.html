@@ -3,8 +3,6 @@
 
 {% block head %}
 
-<link rel="stylesheet" href="{% static '' %}assets/css/passwordeye.css">
-
 <link rel="stylesheet" href="{% static '' %}assets/modules/select2/dist/css/select2.min.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/jquery-selectric/selectric.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
@@ -19,7 +17,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>CONTRATS de {{listing.name}} {{listing.prenom}} </h1>
+            <h1>CONGES de {{listing.name}} {{listing.prenom}} </h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="#">Modules</a></div>
@@ -38,57 +36,67 @@
 
                 <div class="col-12 col-12">
 
-                    {% for showcontrat in showcontrats %}
+                    {% for showconge in showconges %}
                     <div class="card">
 
                         <div class="card-body">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4>
-                                        {% if showcontrat.typecontrat == 'STG' %}
-                                        Stage
-                                        {% elif showcontrat.typecontrat == 'CDD' %}
-                                        Contrat à durée déterminé
-                                        {% elif showcontrat.typecontrat == 'CDI' %}
-                                        Contrat à durée indéterminé
+
+
+                                    <h4> Statut :
+                                        {% if showconge.etatconges == 'NEW' %}
+                                        <button type="button" class="btn btn-primary">NOUVELLE DEMANDE</button>
+                                        {% elif showconge.etatconges == 'ATT' %}
+                                        <button type="button" class="btn btn-warning">EN ATTENTE</button>
+                                        {% elif showconge.etatconges == 'VAL' %}
+                                        <button type="button" class="btn btn-success">VALIDÉE</button>
+                                        {% elif showconge.etatconges == 'REJ' %}
+                                        <button type="button" class="btn btn-danger">REJETÉ</button>
                                         {% endif %}
                                     </h4>
                                     <div class="card-header-action">
-                                        <a data-collapse="#mycard-collapse-{{showcontrat.id}}"
+                                        <a data-collapse="#mycard-collapse-{{showconge.id}}"
                                            class="btn btn-icon btn-info"
                                            href="#"><i class="fas fa-minus"></i></a>
                                     </div> &nbsp;
+                                       {% if showconge.etatconges in 'NEW,ATT' %}
                                     <div class="dropdown">
                                         <a href="#" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Options</a>
                                         <div class="dropdown-menu">
-                                            <a href="" class="dropdown-item has-icon"><i
-                                                    class="far fa-edit"></i>
-                                                Edit</a>
-                                            <a href=""
-                                               class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>Delete</a>
+                                            {% if showconge.etatconges == 'NEW' %}
+                                            <a href="{% url 'soumettre_conges' showconge.id %}" class="dropdown-item has-icon text-success"><i class="fas fa-check"></i>Soumettre</a>
+                                            <a href="{% url 'conges_edit' showconge.id %}" class="dropdown-item has-icon"><i class="far fa-edit"></i>Modifier</a>
+                                            <a href="{% url 'conges_del' showconge.id %}" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>Supprimer</a>
+                                            {% elif showconge.etatconges == 'ATT' %}
+                                            <a href="{% url 'conges_cancel' showconge.id %}" class="dropdown-item has-icon text-warning"><i class="fas fa-undo-alt"></i>Annuler</a>
+                                            {% else %}
+                                            {% endif %}
+
                                         </div>
                                     </div>
+                                        {% endif %}
                                 </div>
-                                <div class="collapse show" id="mycard-collapse-{{showcontrat.id}}">
+                                <div class="collapse show" id="mycard-collapse-{{showconge.id}}">
                                     <div class="card-body">
                                         <p>
-                                            Date de debut : {{ showcontrat.datedebut|date:'d M Y' }}
+                                            Date de debut : {{ showconge.datedebut|date:'d M Y' }}
                                         </p> <br>
                                         <p>
-                                            Date de debut : {{ showcontrat.datefin|date:'d M Y' }}
+                                            Date de debut : {{ showconge.datefin|date:'d M Y' }}
                                         </p><br>
                                         <p>
-                                            Durée du contrat : {{ showcontrat.Calculduree }}
+                                            Durée du Congé : {{ showconge.calculduree }}
                                         </p>
                                     </div>
 
                                     <div class="card-footer">
-                                        <p>Mission :</p>
+                                        <p>Description :</p>
 
                                         <blockquote class="blockquote">
-                                            <i class="fas fa-quote-left fa-xs text-primary"></i>
-                                            <span class="mb-0"> {{ showcontrat.mission }} </span>
-                                            <i class="fas fa-quote-right fa-xs text-primary"></i>
+
+                                            <span class="mb-0" style="font-family: Verdana, Arial, Tahoma, Serif;"> {{ showconge.description }} </span>
+
                                         </blockquote>
 
                                     </div>
@@ -99,6 +107,11 @@
                         </div>
 
                     </div>
+
+                    {% empty %}
+                        <div class="display-2 text-muted text-center">
+                            AUCUN CONGÉ ENREGISTRÉ
+                        </div>
                     {% endfor %}
                 </div>
             </div>

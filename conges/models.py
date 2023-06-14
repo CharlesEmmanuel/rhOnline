@@ -5,12 +5,12 @@ from employe.models import Employe
 # Create your models here.
 
 class Typeconges(models.Model):
-
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
+
 
 ETAT = [
     ('NEW', 'Nouveau'),
@@ -18,6 +18,8 @@ ETAT = [
     ('VAL', 'Validé'),
     ('REJ', 'Rejeté'),
 ]
+
+
 class Conges(models.Model):
     employe = models.ForeignKey(Employe, related_name='conges', on_delete=models.SET_NULL, null=True, blank=True)
     typeconges = models.ForeignKey(Typeconges, related_name='conges', on_delete=models.SET_NULL, null=True, blank=True)
@@ -35,7 +37,7 @@ class Conges(models.Model):
         return "{} ({})".format(self.employe, self.typeconges)
 
     @property
-    def Calculduree(self):
+    def calculduree(self):
         datedebut = self.datedebut
         datefin = self.datefin
 
