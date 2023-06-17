@@ -6,9 +6,7 @@
 <link rel="stylesheet" href="{% static '' %}assets/modules/select2/dist/css/select2.min.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/jquery-selectric/selectric.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
-
 <!-- CSS Libraries -->
-
 <link rel="stylesheet" href="{% static '' %}assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
 
 {% endblock %}
@@ -17,7 +15,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>CONTRAT</h1>
+            <h1>SINISTRE</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="#">Modules</a></div>
@@ -46,45 +44,32 @@
                             </div>
                             <div class="card-body">
 
-                                <div class="row">
-                                    <div class="form-group col-lg-12 col-sm-12">
-                                        <label>Type de Congés</label>
-                                        <select class="form-control select2" name="congesype">
-                                            {% for typeconge in typeconges %}
-                                            <option value="{{ typeconge.id }}" {% if showconges.typeconges.id == typeconge.id %} selected
-                                           {%endif%} > {{ typeconge.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-lg-6 col-sm-12">
-                                        <label>Date de Debut</label>
-                                        <input type="date" class="form-control" name="debutconges" value="{{ showconges.datedebut|date:'Y-m-d' }}">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="form-group col-lg-8 col-sm-12">
+                                        <label for="ramba">Date de sinistre</label>
+                                        <input type="date" id="ramba" class="form-control" name="datedeclaration" value="{{ showsinistre.datesinistre|date:'Y-m-d' }}">
                                     </div>
 
-                                    <div class="form-group col-lg-6 col-sm-12">
-                                        <label>Date de Fin</label>
-                                        <input type="date" class="form-control" name="finconges" value="{{ showconges.datefin|date:'Y-m-d' }}">
-                                    </div>
                                 </div>
 
                                 <p></p>
 
-                                <div class="row">
-                                    <div class="form-group col-lg-12 col-sm-12">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="form-group col-lg-8 col-sm-8">
                                         <label for="miss">Description</label>
                                         <textarea class="form-control" id="miss" name="explain"
-                                                  style="height:250px; font-family: Verdana, Arial, Tahoma, Serif; font-size:20px;">{{showconges.description}}</textarea>
+                                                  style="height:250px;">{{ showsinistre.description }}</textarea>
                                     </div>
                                 </div>
 
-                                <div class="form-group d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block col-6">Modifier
+                                <div class="row d-flex justify-content-center">
+                                    <div class="form-group col-lg-8 col-sm-8">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block">Modifier
 
-                                    </button>
+                                        </button>
+                                    </div>
                                 </div>
+
 
                             </div>
                         </div>
@@ -98,8 +83,6 @@
 {% endblock %}
 
 {%block foot%}
-
-<script src="{% static '' %}js/passwordeye.js"></script>
 
 <script src="{% static '' %}js/jquery.mask.js"></script>
 

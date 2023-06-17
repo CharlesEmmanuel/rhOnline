@@ -15,7 +15,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>CONGÉ</h1>
+            <h1>SINISTRE</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="#">Modules</a></div>
@@ -44,46 +44,32 @@
                             </div>
                             <div class="card-body">
 
-                                <div class="row">
-                                    <div class="form-group col-lg-12 col-sm-12">
-                                        <label>Type de Congés</label>
-                                        <select class="form-control select2" name="congesype">
-                                            <option>-----------------------</option>
-                                            {% for type in typeconges %}
-                                            <option value="{{ type.id }}">{{ type.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="form-group col-lg-6 col-sm-12">
-                                        <label>Date de Debut</label>
-                                        <input type="date" class="form-control" name="debutconges">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="form-group col-lg-8 col-sm-12">
+                                        <label for="ramba">Date de sinistre</label>
+                                        <input type="date" id="ramba" class="form-control" name="datedeclaration">
                                     </div>
 
-                                    <div class="form-group col-lg-6 col-sm-12">
-                                        <label>Date de Fin</label>
-                                        <input type="date" class="form-control" name="finconges">
-                                    </div>
                                 </div>
 
                                 <p></p>
 
-
-                                <div class="row">
-                                    <div class="form-group col-lg-12 col-sm-12">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="form-group col-lg-8 col-sm-8">
                                         <label for="miss">Description</label>
-                                        <textarea class="form-control" id="miss"  name="explain" style="height:250px;" ></textarea>
+                                        <textarea class="form-control" id="miss" name="explain"
+                                                  style="height:250px;"></textarea>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block">Enregistrer
+                                <div class="row d-flex justify-content-center">
+                                    <div class="form-group col-lg-8 col-sm-8">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block">Enregistrer
 
-                                    </button>
+                                        </button>
+                                    </div>
                                 </div>
+
 
                             </div>
                         </div>

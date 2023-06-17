@@ -110,7 +110,7 @@
                                         <label>Département</label>
                                         <select class="form-control select2" name="dapartmpnt">
                                             {% for dep in departements %}
-                                            <option value="{{ dep.id }}" {% if listing.departement.id== dep.id %}
+                                            <option value="{{ dep.id }}" {% if listing.departement.id == dep.id %}
                                                     selected
                                                     {%endif%}>{{ dep.name }}
                                             </option>
@@ -122,7 +122,7 @@
                                         <label>Lieu D'emploie</label>
                                         <select class="form-control select2" name="lieuservice">
                                             {% for lie in lieuemp %}
-                                            <option value="{{ lie.id }}" {% if listing.lieuemploie.id== lie.id %}
+                                            <option value="{{ lie.id }}" {% if listing.lieuemploie.id == lie.id %}
                                                     selected
                                                     {%endif%}>{{ lie.name }}
                                             </option>
@@ -136,7 +136,7 @@
                                         <label>Poste</label>
                                         <select class="form-control select2" name="unposted">
                                             {% for pos in postes %}
-                                            <option value="{{ pos.id }}" {% if listing.poste.id== pos.id %}
+                                            <option value="{{ pos.id }}" {% if listing.poste.id == pos.id %}
                                                     selected
                                                     {%endif%}>{{ pos.name }}
                                             </option>

@@ -9,7 +9,7 @@ from employe.models import Account
 # Create your views here.
 @login_required(login_url="login")
 def dashboard(request):
-    return render(request, 'dashboard/dash.html')
+    return render(request, 'dashboard/menu.html')
 
 
 def login_user(request):
@@ -39,14 +39,17 @@ def login_user(request):
     return render(request, 'home/login.html')
 
 
-<<<<<<< HEAD
+
 def pointage_page(request):
     return render(request, 'home/pointage.html')
-=======
-def home_page(request):
-    return render(request, 'home/home.html')
+
+# def home_page(request):
+#     return render(request, 'home/home.html')
 
 
 def entry(request):
     return render(request, 'home/entree.html')
->>>>>>> 68304463259f30b7e2cd203ff40043a03920acd2
+
+def sortie(request):
+    return render(request, 'home/sortie.html')
+

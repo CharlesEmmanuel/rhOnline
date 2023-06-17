@@ -1,5 +1,6 @@
 {% extends 'panel/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
 
@@ -70,10 +71,18 @@
                                 <div class="collapse show" id="mycard-collapse-{{showcontrat.id}}">
                                     <div class="card-body">
                                         <p>
-                                            Date de debut : {{ showcontrat.datedebut|date:'d M Y' }}
+                                            Date de debut :
+                                            {% language 'fr' %}
+                                                {{ showcontrat.datedebut|date:'d E Y' }}
+                                            {% endlanguage %}
+
                                         </p> <br>
                                         <p>
-                                            Date de debut : {{ showcontrat.datefin|date:'d M Y' }}
+                                            Date de debut :
+                                            {% language 'fr' %}
+                                                {{ showcontrat.datefin|date:'d E Y' }}
+                                            {% endlanguage %}
+
                                         </p><br>
                                         <p>
                                             Durée du contrat : {{ showcontrat.Calculduree }}
@@ -84,9 +93,7 @@
                                         <p>Mission :</p>
 
                                         <blockquote class="blockquote">
-                                            <i class="fas fa-quote-left fa-xs text-primary"></i>
-                                            <span class="mb-0"> {{ showcontrat.mission }} </span>
-                                            <i class="fas fa-quote-right fa-xs text-primary"></i>
+                                              <span class="mb-0" style="font-family: Verdana, Arial, Tahoma, Serif;"> {{ showcontrat.mission }}  </span>
                                         </blockquote>
 
                                     </div>
@@ -97,6 +104,10 @@
                         </div>
 
                     </div>
+                    {% empty %}
+                        <div class="display-2 text-muted text-center">
+                            AUCUN CONTRAT ENREGISTRÉ
+                        </div>
                     {% endfor %}
                 </div>
             </div>

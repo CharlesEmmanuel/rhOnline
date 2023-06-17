@@ -1,5 +1,6 @@
 {% extends 'panel/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block head %}
 
@@ -46,13 +47,13 @@
 
                                     <h4> Statut :
                                         {% if showconge.etatconges == 'NEW' %}
-                                        <button type="button" class="btn btn-primary">NOUVELLE DEMANDE</button>
+                                        <span class="badge badge-primary">NOUVELLE DEMANDE</span>
                                         {% elif showconge.etatconges == 'ATT' %}
-                                        <button type="button" class="btn btn-warning">EN ATTENTE</button>
+                                        <span class="badge badge-warning">EN ATTENTE</span>
                                         {% elif showconge.etatconges == 'VAL' %}
-                                        <button type="button" class="btn btn-success">VALIDÉE</button>
+                                        <span class="badge badge-success">VALIDÉE</span>
                                         {% elif showconge.etatconges == 'REJ' %}
-                                        <button type="button" class="btn btn-danger">REJETÉ</button>
+                                        <span class="badge badge-danger">REJETÉ</span>
                                         {% endif %}
                                     </h4>
                                     <div class="card-header-action">
@@ -81,10 +82,18 @@
                                 <div class="collapse show" id="mycard-collapse-{{showconge.id}}">
                                     <div class="card-body">
                                         <p>
-                                            Date de debut : {{ showconge.datedebut|date:'d M Y' }}
+                                            Date de debut :
+                                            {% language 'fr' %}
+                                                {{ showconge.datedebut|date:'d E Y' }}
+                                            {% endlanguage %}
+
                                         </p> <br>
                                         <p>
-                                            Date de debut : {{ showconge.datefin|date:'d M Y' }}
+                                            Date de debut :
+                                            {% language 'fr' %}
+                                                {{ showconge.datefin|date:'d E Y' }}
+                                            {% endlanguage %}
+
                                         </p><br>
                                         <p>
                                             Durée du Congé : {{ showconge.calculduree }}

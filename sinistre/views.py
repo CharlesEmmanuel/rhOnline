@@ -2,9 +2,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from django.contrib import messages
+from django.urls import reverse
 
 from sinistre.models import Employe
 from sinistre.models import Sinistre
+
+
 # from django.contrib.auth.decorators import login_required
 
 
@@ -25,35 +28,31 @@ def add_sinistre(request, pk):
 
     if request.method == 'POST':
 
-        if not request.POST['sinistreype'] and not request.POST['debutsinistre']:
+        if not request.POST['explain'] and not request.POST['datedeclaration']:
 
             messages.error(request, "Ajout de sinistre Échouée", "danger")
         else:
 
-            typesinistre = request.POST['sinistreype']
-            datedebut = request.POST['debutsinistre']
-            datefin = request.POST['finsinistre']
-            salairemp = request.POST['paye']
-            missionemp = request.POST['role']
+            dateevent = request.POST['datedeclaration']
+            description = request.POST['explain']
 
             # Calcul de la durée de sinistre
 
             sinistre = Sinistre()
 
-            sinistre.typesinistre = typesinistre
-            sinistre.mission = missionemp
+            sinistre.description = description
 
-            sinistre.datedebut = datedebut
-            sinistre.datefin = datefin
-            sinistre.salaire = salairemp
+            sinistre.datesinistre = dateevent
             sinistre.employe_id = employe.pk
 
             sinistre.save()
 
             # Code d'ajout du sinistre
-
+            idemp = employe.pk
             messages.success(request, "sinistre Enrégistré", "success")
-            return redirect('sinistre_liste_emp')
+
+            return redirect(reverse('sinistre_show', args=[idemp]))
+
     else:
         context = {
             'listing': employe,
@@ -85,51 +84,46 @@ def edit_sinistre(request, pk):
 
     if request.method == 'POST':
 
-        if not request.POST['sinistreype'] and not request.POST['debutsinistre']:
+        if not request.POST['datedeclaration'] and not request.POST['explain']:
 
             messages.error(request, "Mise à jour de sinistre Échouée", "danger")
         else:
 
-            typesinistre = request.POST['sinistreype']
-            datedebut = request.POST['debutsinistre']
-            datefin = request.POST['finsinistre']
-            salairemp = request.POST['paye']
-            missionemp = request.POST['role']
+
+            dateevent = request.POST['datedeclaration']
+            description = request.POST['explain']
 
             # Calcul de la durée de sinistre
 
-            sinistre.typesinistre = typesinistre
-            sinistre.mission = missionemp
+            sinistre.description = description
 
-            sinistre.datedebut = datedebut
-            sinistre.datefin = datefin
-            sinistre.salaire = salairemp
+            sinistre.datesinistre = dateevent
             sinistre.employe_id = employe.pk
 
             sinistre.save()
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
 
-        messages.success(request, "Modification Effectuée", "success")
-        return redirect('liste_employe')
+            idemp = employe.pk
+            messages.success(request, "sinistre modifié", "success")
+            return redirect(reverse('sinistre_show', args=[idemp]))
+
     else:
         context = {
             'listing': employe,
-            'showsinistres': sinistre,
+            'showsinistre': sinistre,
         }
         return render(request, 'sinistre/edit_sinistre.html', context)
 
 
-
 def del_sinistre(request, pk):
-        try:
-            sinistre = Sinistre.objects.get(id=pk)
+    try:
+        sinistre = Sinistre.objects.get(id=pk)
 
-        except sinistre.DoesNotExist:
-            messages.success(request, "sinistre n'existe pas")
+    except sinistre.DoesNotExist:
+        messages.success(request, "sinistre n'existe pas")
 
-        sinistre.soft_deleting = True
-        sinistre.save()
-        messages.success(request, "sinistre Supprimé")
-        next = request.POST.get('next', '/')
-        return HttpResponseRedirect(next)
+    sinistre.soft_deleting = True
+    sinistre.save()
+
+    idemp = sinistre.employe_id
+    messages.success(request, "sinistre supprimé", "danger")
+    return redirect(reverse('sinistre_show', args=[idemp]))
