@@ -3,12 +3,12 @@ from django.contrib import messages, auth
 
 from django.contrib.auth.decorators import login_required
 
-from employe.models import Account
 
 
 # Create your views here.
 @login_required(login_url="login")
 def dashboard(request):
+
     return render(request, 'dashboard/menu.html')
 
 

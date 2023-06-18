@@ -1,0 +1,276 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block head %}
+
+
+<link rel="stylesheet" href="{% static '' %}assets/css/passwordeye.css">
+
+<link rel="stylesheet" href="{% static '' %}assets/modules/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="{% static '' %}assets/modules/jquery-selectric/selectric.css">
+<link rel="stylesheet" href="{% static '' %}assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
+
+<!-- CSS Libraries -->
+
+<link rel="stylesheet" href="{% static '' %}assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
+
+{% endblock %}
+{% block body %}
+
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>EMPLOYE</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="#">Modules</a></div>
+                <div class="breadcrumb-item">DataTables</div>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages%}
+        <div class="alert alert-{{message.tags}}">{{message}}.</div>
+        {%endfor%}
+        {% endif %}
+
+        <div class="section-body">
+            <div class="row">
+
+                <div class="col-12 col-12">
+                    <form class="needs-validation" novalidate="" method="POST">
+                        {% csrf_token %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>
+                                    Compte Utilisateur
+                                </h2>
+                            </div>
+                            <div class="card-body">
+
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                                            <!-- Contenu colonne 1 -->
+                                            <label for="frist_name">Nom</label>
+                                            <input id="frist_name" type="text" class="form-control" name="frist_name"
+                                                   autofocus>
+                                        </div>
+                                        <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                                            <!-- Contenu colonne 2 -->
+                                            <label for="last_name">Prénom</label>
+                                            <input id="last_name" type="text" class="form-control" name="last_name">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="form-group col-sm-10 col-md-6 col-lg-6">
+                                            <!-- Contenu colonne 1 -->
+                                            <label for="email">Email</label>
+                                            <input id="email" type="email" class="form-control" name="mail">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-6 col-lg-6">
+                                            <!-- Contenu colonne 2 -->
+                                            <label>Type</label>
+                                            <select class="form-control select2" name="type_cmp">
+                                                <option>-----------------------</option>
+                                                <option value="E">Employé</option>
+                                                <option value="R">RH</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="form-group col-sm-10 col-md-8 col-lg-8">
+                                            <label>Mot de Passe</label>
+                                            <div class="input-group">
+
+                                                <input type="password" name="motdepass" id="password"
+                                                       class="form-control"/>
+                                                <div class="input-group-prepend" id="">
+                                                    <div class="input-group-text" id="togglePassword">
+                                                        <i class="fa fa-eye-slash"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>
+                                    Informations Personnelles
+                                </h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Département</label>
+                                        <select class="form-control select2" name="dapartmpnt">
+                                            <option>-----------------------</option>
+                                            {% for dep in departements %}
+                                            <option value="{{ dep.id }}">{{ dep.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Lieu D'emploie</label>
+                                        <select class="form-control select2" name="lieuservice">
+                                            <option>-----------------------</option>
+                                            {% for lie in lieuemp %}
+                                            <option value="{{ lie.id }}">{{ lie.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Poste</label>
+                                        <select class="form-control select2" name="unposted">
+                                            <option>-----------------------</option>
+                                            {% for pos in postes %}
+                                            <option value="{{ pos.id }}">{{ pos.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label for="addr">Adresse</label>
+                                        <input id="addr" type="text" class="form-control" name="localite">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Genre</label>
+                                        <select class="form-control select2" name="genrehumain">
+                                            <option>-----------------------</option>
+                                            <option value="H">Homme</option>
+                                            <option value="F">Femme</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Date de Naissance</label>
+                                        <input type="date" class="form-control" name="naissance">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Téléphone</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-phone"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" name="telephone"
+                                                   data-mask="+225 00 00 00 00 00">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Téléphone2</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-phone"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" name="cellulaire"
+                                                   data-mask="+225 00 00 00 00 00">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label for="cb">Numéro Bancaire</label>
+                                        <input id="cb" type="text" class="form-control" name="bancaire"
+                                               data-mask="00000000000000">
+
+                                    </div>
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Statut Matrimonial</label>
+                                        <select class="form-control select2" name="situation">
+                                            <option>-----------------------</option>
+                                            <option value="C">Celibataire</option>
+                                            <option value="M">Marié(e)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Nombre d'Enfants</label>
+                                        <input type="number" class="form-control" name="enfants" min="0" max="30">
+                                    </div>
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Contact d'Urgence</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-phone"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" name="casurgence"
+                                                   data-mask="+225 00 00 00 00 00">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block">Enregistrer
+
+                                    </button>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{%block foot%}
+
+<script src="{% static '' %}js/passwordeye.js"></script>
+
+<script src="{% static '' %}js/jquery.mask.js"></script>
+
+
+<script src="{% static '' %}assets/modules/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- Page Specific JS File -->
+
+<script src="{% static '' %}assets/modules/select2/dist/js/select2.full.min.js"></script>
+<script src="{% static '' %}js/page/forms-advanced-forms.js"></script>
+
+
+<!-- JS Libraies -->
+<script src="{% static '' %}assets/modules/izitoast/js/iziToast.min.js"></script>
+
+<!-- Page Specific JS File -->
+
+{%endblock%}

@@ -7,56 +7,106 @@
 
 {% endblock %}
 {% block body %}
+<div class="section-body">
+    <div class="">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header border border-success d-flex justify-content-center">
+                    <div class="">
+                        <h4>BIENVENUE
+                            {% if user.employe.genre == 'F' %}
+                            Mme
+                            {% else %}
+                            Mr
+                            {% endif %}
+                            {{user.employe}}
 
-<section class="section">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <ul class="nav">
-                    <li>
-                        <a href="https://jasminegump.com" target="_blank">
-                            <i class="fas fa-home fa-3x home">
-                                <div class="circle"></div>
-                            </i>
-                            <div class="title">Home</div>
-                        </a>
-                    </li>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body" style="margin-top:8%;">
+                    <div class="row mt-4">
+                        <div class="col-12 col-lg-8 offset-lg-2">
+                            <div class="wizard-steps">
+                                <div class="wizard-step wizard-step-active">
+                                    <a href="#" class="text-white">
+                                        <div class="wizard-step-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="wizard-step-label">
+                                            EMPLOYÉ
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="wizard-step wizard-step-active">
+                                    <a href="#" class="text-white">
+                                        <div class="wizard-step-icon">
+                                            <i class="fas fa-file-contract"></i>
+                                        </div>
+                                        <div class="wizard-step-label">
+                                            CONTRAT
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="wizard-step wizard-step-active">
+                                    <a href="#" class="text-white">
+                                        <div class="wizard-step-icon">
+                                            <i class="fas fa-user-clock"></i>
+                                        </div>
+                                        <div class="wizard-step-label">
+                                            PRESENCE
+                                        </div>
+                                    </a>
+                                </div>
 
-                    <li>
-                        <a href="https://twitter.com/ladyjellington" target="_blank">
-                            <i class="fab fa-twitter fa-3x twitter">
-                                <div class="circle"></div>
-                            </i>
-                            <div class="title">Twitter</div>
-                        </a>
-                    </li>
+                            </div>
+                        </div>
+                    </div>
 
-                    <li>
-                        <a href="https://codepen.io/ladyjellington" target="_blank">
-                            <i class="fab fa-codepen fa-3x codepen">
-                                <div class="circle"></div>
-                            </i>
-                            <div class="title">Codepen</div>
-                        </a>
-                    </li>
+                    <div class="row mt-4">
+                        <div class="col-12 col-lg-8 offset-lg-2">
+                            <div class="wizard-steps">
+                                <div class="wizard-step wizard-step-active">
+                                    <a href="#" class="text-white">
+                                        <div class="wizard-step-icon">
+                                            <i class="fas fa-calendar-week"></i>
+                                        </div>
+                                        <div class="wizard-step-label">
+                                            CONGÉ
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="wizard-step wizard-step-active">
+                                    <a href="#" class="text-white">
+                                        <div class="wizard-step-icon">
+                                            <i class="fas fa-car-crash"></i>
+                                        </div>
+                                        <div class="wizard-step-label">
+                                            SINISTRE
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="wizard-step wizard-step-active">
+                                    <a href="#" class="text-white">
+                                        <div class="wizard-step-icon">
+                                            <i class="fas fa-cogs"></i>
+                                        </div>
+                                        <div class="wizard-step-label">
+                                            PARAMETRE
+                                        </div>
+                                    </a>
+                                </div>
 
-                    <li>
-                        <a href="https://github.com/jasminegmp" target="_blank">
-                            <i class="fab fa-github fa-3x github">
-                                <div class="circle"></div>
-                            </i>
-                            <div class="title">Github</div>
-                        </a>
-                    </li>
-                    <div class="background"></div>
-
-                </ul>
-
-
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</section>
+
+</div>
+
 {% endblock %}
 
 {%block foot%}

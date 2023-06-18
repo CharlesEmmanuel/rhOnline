@@ -2,7 +2,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from employe.views import liste_departement, delete_departement, liste_poste, delete_poste, edit_poste, liste_liemploi, \
-    edit_liemploi, delete_liemploi, liste_emp, EmployeCreateView, delete_employe, edit_employe, addFace, scanFace
+    edit_liemploi, delete_liemploi, liste_emp, EmployeCreateView, delete_employe, edit_employe, addFace, scanFace, \
+    fiche_employe
 from mysite import settings
 
 urlpatterns = [
@@ -32,5 +33,7 @@ urlpatterns = [
     path('liste', liste_emp, name='liste_employe'),
     path('delete/<int:pk>', delete_employe, name='delete_employe'),
     path('edit/<int:pk>', edit_employe, name='edit_employe'),
+
+path('fiche/<int:pk>', fiche_employe, name='employe_fiche'),
 
 ]

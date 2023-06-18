@@ -16,7 +16,7 @@
 
 <!--            Menu de employe-->
             <li class="menu-header">Employé</li>
-                <li><a class="nav-link" href="{% url 'create_employe' %}"><i class="fa fa-user"></i><span>Employé</span></a></li>
+                <li><a class="nav-link" href="{%if user.is_employe == False %} {% url 'create_employe' %} {%else%} {% url 'employe_fiche' user.employe.id %} {%endif%}"><i class="fa fa-user"></i><span>Employé</span></a></li>
                 <li><a class="nav-link" href="{% url 'liste_employe' %}"><i class="fa fa-search"></i> </i> <span>Recherche</span></a></li>
 <!--        Menu des contrats-->
             <li class="menu-header">Contrat</li>

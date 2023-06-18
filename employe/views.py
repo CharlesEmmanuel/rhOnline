@@ -395,3 +395,21 @@ def scanFace(request,face_id):
     facerecognition.faceDetect(face_id)
     facerecognition.trainFace()
     return redirect('/')
+
+
+
+@login_required(login_url="login")
+def fiche_employe(request, pk):
+
+    employe = Employe.objects.get(id=pk)
+    account = Account.objects.get(id=employe.account_id)
+
+    context = {
+        'listing': employe,
+        'compte': account,
+        'departements': Departement.objects.filter(soft_deleting=False),
+        'lieuemp': LieuEmploi.objects.filter(soft_deleting=False),
+        'postes': Poste.objects.filter(soft_deleting=False),
+    }
+
+    return render(request, 'employe/fiche_employe.html', context)
