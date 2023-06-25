@@ -61,8 +61,8 @@ class MyAccountManager(BaseUserManager):
 
 USER_CHOICES = [
     ('E', 'Employe'),
-    ('R', 'Rh'),
-    ('AD','Admin')
+    ('R', 'Ressources Humaines'),
+    ('AD', 'Administrateur')
 ]
 class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
@@ -97,15 +97,28 @@ class Account(AbstractBaseUser):
     @property
     def is_employe(self):
         if self.user_type == 'E':
-            return True
+            return 'EMPLOYÉ'
         else:
             return False
     @property
     def is_Rh(self):
         if self.user_type == 'R':
-            return True
+            return 'RESSOURCES HUMAINES'
         else:
             return False
+
+    def statutemp(self):
+        if(self.user_type=='E'):
+            return 'EMPLOYÉ'
+        elif (self.user_type == 'R'):
+            return 'RESSOURCES HUMAINES'
+        elif (self.user_type == 'AD'):
+            return 'ADMINISTRATEUR'
+
+
+
+
+
 
 GENDER_CHOICES = [
     ('H', 'Homme'),
@@ -142,9 +155,20 @@ class Employe(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
     def __str__(self):
-        return self.name+" "+self.prenom
+        return self.name +" "+self.prenom
 
     def listcontrats(self):
         contrats = self.contrat.filter(soft_deleting=False).count()
 
         return contrats
+    def getGenre(self):
+        if(self.genre == 'H'):
+            return 'Homme'
+        else:
+            return 'Femme'
+
+    def getStatutMat(self):
+        if (self.statutmat == 'C'):
+            return 'CÉLIBATAIRE'
+        else:
+            return 'MARIÉ'

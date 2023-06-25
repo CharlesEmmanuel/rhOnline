@@ -7,14 +7,17 @@ from datetime import datetime
 from employe.models import Departement, Poste, LieuEmploi, Employe, Account
 
 from employe.backEnd import FaceRecognition
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.decorators import method_decorator
 
 facerecognition = FaceRecognition()
 
 # Create your views here.
 
+
+
 @login_required(login_url="login")
+# @permission_required(Account.user_type,login_url="login")
 def liste_departement(request):
     # print(request.name) A FAIRE UNE VERIFICATION DES INFORMATIONS ENTREES PAS L'UTILISATEUR ( CHAMPS VIDES )
     # breakpoint()
@@ -403,13 +406,16 @@ def fiche_employe(request, pk):
 
     employe = Employe.objects.get(id=pk)
     account = Account.objects.get(id=employe.account_id)
+    departement = Departement.objects.filter(soft_deleting=False)
+    lieuemp = LieuEmploi.objects.filter(soft_deleting=False)
+    poste = Poste.objects.filter(soft_deleting=False)
 
     context = {
         'listing': employe,
         'compte': account,
-        'departements': Departement.objects.filter(soft_deleting=False),
-        'lieuemp': LieuEmploi.objects.filter(soft_deleting=False),
-        'postes': Poste.objects.filter(soft_deleting=False),
+        'departements': departement,
+        'lieuemp': lieuemp,
+        'postes': poste,
     }
 
     return render(request, 'employe/fiche_employe.html', context)

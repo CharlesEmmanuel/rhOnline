@@ -13,8 +13,8 @@ class DepartementForm(ModelForm):
         model = Departement
         fields = ['name', 'description']
         labels = {
-            'name' : _('Nom'),
-            'description' : _('Description')
+            'name': _('Nom'),
+            'description': _('Description')
         }
         error_messages = {
             'name': {
