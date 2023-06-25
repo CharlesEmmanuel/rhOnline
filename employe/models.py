@@ -1,5 +1,9 @@
+from uuid import uuid4
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
+from django.utils.safestring import mark_safe
+import os
 
 # Create your models here.
 
@@ -129,6 +133,20 @@ STATUT_MAT = [
     ('M', 'Marié'),
 ]
 
+
+def renameImage(instance,filename):
+    upload_to = 'employe'
+    ext = filename.split('.')[-1]
+    # get filename
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join(upload_to, filename)
+
+
 class Employe(models.Model):
     account = models.OneToOneField(Account, related_name='employe', on_delete=models.SET_NULL, null=True, blank=True)
     departement = models.ForeignKey(Departement, related_name='employe', on_delete=models.SET_NULL, null=True, blank=True)
@@ -146,10 +164,10 @@ class Employe(models.Model):
     emailemp = models.CharField(max_length=255) #Email employe
     adress = models.CharField(max_length=255)
     numbank = models.CharField(max_length=255)
-    nationnalite = models.CharField(max_length=255)
     statutmat = models.CharField(choices=STATUT_MAT, max_length=50)
     nbrechild = models.IntegerField()
     contacturgence = models.CharField(max_length=100)
+    photoemp = models.ImageField(blank=True, upload_to=renameImage, null=True, default="employe/photo_default-1.jpg")
 
     soft_deleting = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True)
@@ -172,3 +190,7 @@ class Employe(models.Model):
             return 'CÉLIBATAIRE'
         else:
             return 'MARIÉ'
+
+    def imageEmp(self):
+        return mark_safe('<img src="{}"  height="20">').format(self.photoemp.url)
+

@@ -56,7 +56,7 @@ class LiemploiForm(ModelForm):
 class EmployeForm(forms.ModelForm):
     class Meta:
         model = Employe
-        fields = ['account', 'departement', 'lieuemploie', 'poste', 'name', 'prenom', 'genre', 'datenaiss', 'phone1', 'phone2', 'adress', 'numbank', 'nationnalite', 'statutmat', 'nbrechild', 'contacturgence']
+        fields = ['account', 'departement', 'lieuemploie', 'poste', 'name', 'prenom', 'genre', 'datenaiss', 'phone1', 'phone2', 'adress', 'numbank', 'statutmat', 'nbrechild', 'contacturgence']
         labels = {
             'account': _('Compte'),
             'departement': _('Département'),
@@ -70,7 +70,6 @@ class EmployeForm(forms.ModelForm):
             'phone2': _('Téléphone 2'),
             'adress': _('Adresse'),
             'numbank': _('Numero Bancaire'),
-            'nationnalite': _('Nationnalité'),
             'statutmat': _('Statut Matrimonial'),
             'nbrechild': _('Nombre d\'enfants'),
             'contacturgence': _('Contact d\'urgence'),
@@ -89,7 +88,6 @@ class EmployeForm(forms.ModelForm):
             'phone2': forms.TextInput(attrs={'name': 'new_name_phone2', 'class': 'form-control', 'required': 'required'}),
             'adress': forms.TextInput(attrs={'name': 'new_name_adress', 'class': 'form-control', 'required': 'required'}),
             'numbank': forms.TextInput(attrs={'name': 'new_name_numbank', 'class': 'form-control', 'required': 'required'}),
-            'nationnalite': forms.TextInput(attrs={'name': 'new_name_nationnalite', 'class': 'form-control', 'required': 'required'}),
             'statutmat': forms.Select(attrs={'name': 'new_name_statutmat', 'class': 'form-control', 'required': 'required'}),
             'nbrechild': forms.NumberInput(attrs={'name': 'new_name_nbrechild', 'class': 'form-control', 'required': 'required'}),
             'contacturgence': forms.TextInput(attrs={'name': 'new_name_contacturgence', 'class': 'form-control', 'required': 'required'}),

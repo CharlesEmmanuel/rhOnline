@@ -39,7 +39,7 @@
             <div class="row">
 
                 <div class="col-12 col-12">
-                    <form class="needs-validation" novalidate="" method="POST">
+                    <form class="needs-validation" novalidate="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="card">
                             <div class="card-header">
@@ -232,6 +232,17 @@
                                                    data-mask="+225 00 00 00 00 00">
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <label>Photo d'identité</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="customFile" name="fichier">
+                                            <label class="custom-file-label" for="customFile"></label>
+                                        </div>
+                                    </div>
+
                                 </div>
 
 

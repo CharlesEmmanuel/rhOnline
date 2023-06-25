@@ -10,14 +10,17 @@ from employe.backEnd import FaceRecognition
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.decorators import method_decorator
 
+from employe.permissions import employe_permission, show_permission
+
 facerecognition = FaceRecognition()
+
 
 # Create your views here.
 
 
-
 @login_required(login_url="login")
 # @permission_required(Account.user_type,login_url="login")
+@employe_permission
 def liste_departement(request):
     # print(request.name) A FAIRE UNE VERIFICATION DES INFORMATIONS ENTREES PAS L'UTILISATEUR ( CHAMPS VIDES )
     # breakpoint()
@@ -201,8 +204,6 @@ def edit_liemploi(request, pk):
         return render(request, 'lieuemploi/liste_lieuemploi.html', context)
 
 
-
-
 @method_decorator(login_required(login_url="login"), name='get')
 class EmployeCreateView(CreateView):
     list_em = Employe.objects.filter(soft_deleting=False)
@@ -214,10 +215,8 @@ class EmployeCreateView(CreateView):
         'postes': Poste.objects.all(),
     }
 
-
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self.context)
-
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -254,10 +253,13 @@ class EmployeCreateView(CreateView):
             nbreenf = request.POST['enfants']
             numurgence = request.POST['casurgence']
 
+            print("valeur de l'image....")
+            print(request.POST['fichier'])
+
 
             employe = Employe()
 
-            account = Account.objects.create_user(nom,prenom,email,user_type=user_type,password=passwd)
+            account = Account.objects.create_user(nom, prenom, email, user_type=user_type, password=passwd)
 
             employe.faceid = account.pk
 
@@ -277,9 +279,12 @@ class EmployeCreateView(CreateView):
             employe.statutmat = statutmat
             employe.nbrechild = nbreenf
             employe.contacturgence = numurgence
+            if request.POST['fichier'] != '':
+                employe.photoemp = request.FILES['fichier']
             employe.save()
 
-            addFace(employe.faceid)
+            # addFace(employe.faceid)
+
 
 # Fonction listing des employes
 @login_required(login_url="login")
@@ -307,6 +312,7 @@ def delete_employe(request, pk):
     employe.save()
     messages.success(request, "Employé Supprimé")
     return redirect('liste_employe')
+
 
 @login_required(login_url="login")
 def edit_employe(request, pk):
@@ -382,8 +388,6 @@ def edit_employe(request, pk):
         return render(request, 'employe/edit_employe.html', context)
 
 
-
-
 @login_required(login_url="login")
 def addFace(face_id):
     face_id = face_id
@@ -393,29 +397,31 @@ def addFace(face_id):
 
 
 @login_required(login_url="login")
-def scanFace(request,face_id):
+def scanFace(request, face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)
     facerecognition.trainFace()
     return redirect('/')
 
 
-
 @login_required(login_url="login")
 def fiche_employe(request, pk):
+    if show_permission(request, pk):
 
-    employe = Employe.objects.get(id=pk)
-    account = Account.objects.get(id=employe.account_id)
-    departement = Departement.objects.filter(soft_deleting=False)
-    lieuemp = LieuEmploi.objects.filter(soft_deleting=False)
-    poste = Poste.objects.filter(soft_deleting=False)
+        employe = Employe.objects.get(id=pk)
+        account = Account.objects.get(id=employe.account_id)
+        departement = Departement.objects.filter(soft_deleting=False)
+        lieuemp = LieuEmploi.objects.filter(soft_deleting=False)
+        poste = Poste.objects.filter(soft_deleting=False)
 
-    context = {
-        'listing': employe,
-        'compte': account,
-        'departements': departement,
-        'lieuemp': lieuemp,
-        'postes': poste,
-    }
+        context = {
+            'listing': employe,
+            'compte': account,
+            'departements': departement,
+            'lieuemp': lieuemp,
+            'postes': poste,
+        }
 
-    return render(request, 'employe/fiche_employe.html', context)
+        return render(request, 'employe/fiche_employe.html', context)
+    else:
+        return redirect('dashboard')
