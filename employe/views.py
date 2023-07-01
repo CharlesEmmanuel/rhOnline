@@ -424,4 +424,4 @@ def fiche_employe(request, pk):
 
         return render(request, 'employe/fiche_employe.html', context)
     else:
-        return redirect('dashboard')
+        return render(request, 'error_pages/errors-404.html')

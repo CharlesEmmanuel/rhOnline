@@ -8,18 +8,20 @@
         </div>
         <ul class="sidebar-menu">
         <!--Menu Parametre-->
+            {% if user.is_employe == False %}
             <li class="menu-header">Settings</li>
                 <li><a class="nav-link" href="{% url 'liste_departement' %}"><i class="fa fa-building"></i><span>Departement</span></a></li>
                 <li><a class="nav-link" href="{% url 'liste_poste' %}"><i class="fa fa-briefcase"></i> </i> <span>Poste</span></a></li>
                 <li><a class="nav-link" href="{% url 'liste_liemploi' %}"><i class="fa fa-map-marker"></i> </i> <span>Lieu Emploie</span></a></li>
                 <li><a class="nav-link" href="{% url 'add_tconges' %}"><i class="fas fa-calendar-week"></i> <span>Type de Congés</span></a></li>
-
+            {% endif %}
 <!--            Menu de employe-->
             <li class="menu-header">Employé</li>
                 <li><a class="nav-link" href="{%if user.is_employe == False %} {% url 'create_employe' %} {%else%} {% url 'employe_fiche' user.employe.id %} {%endif%}"><i class="fa fa-user"></i><span>Employé</span></a></li>
                 <li><a class="nav-link" href="{% url 'liste_employe' %}"><i class="fa fa-search"></i> </i> <span>Recherche</span></a></li>
 <!--        Menu des contrats-->
             <li class="menu-header">Contrat</li>
+                <li><a class="nav-link" href="{% url 'contrat_show' user.employe.id %}"><i class="fas fa-file-signature"></i><span>Fiche Contrat</span></a></li>
                 <li><a class="nav-link" href="{% url 'contrat_liste_emp' %}"><i class="fa fa-list"></i><span>Liste</span></a></li>
 
 <!--        Menu des Presence-->

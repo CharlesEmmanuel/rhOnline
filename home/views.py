@@ -12,7 +12,6 @@ def dashboard(request):
     print(auth.get_user(request))
     return render(request, 'dashboard/menu.html')
 
-
 def login_user(request):
     # breakpoint()
     if request.method == 'POST':
@@ -31,8 +30,8 @@ def login_user(request):
             if (user is not None):
                 print("Connecté")
                 auth.login(request, user)
-                # return redirect("dashboard")
-                return render(request, 'dashboard/menu.html')
+                return redirect("dashboard")
+                # return render(request, 'dashboard/menu.html')
             else:
                 print("Non Connecté")
                 messages.error(request, "Connexion Echouée", "danger")

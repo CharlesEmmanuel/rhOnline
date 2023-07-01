@@ -7,11 +7,12 @@
 
 {% endblock %}
 {% block body %}
+{% include 'panel/header_dash.html' %}
 <div class="section-body">
     <div class="">
         <div class="col-12">
             <div class="card">
-                <div class="card-header border border-success d-flex justify-content-center">
+                <div class="card-header d-flex justify-content-center">
                     <div class="">
                         <h4>BIENVENUE
                             {% if user.employe.genre == 'F' %}
@@ -19,7 +20,7 @@
                             {% else %}
                             Mr
                             {% endif %}
-                            {{user.employe}}
+                            {{user.employe | upper}}
 
                         </h4>
                     </div>
@@ -63,8 +64,12 @@
                         </div>
                     </div>
 
-                    <div class="row mt-4">
+                    <div class="row mt-4 {% if user.is_employe == False %}{% else %} d-flex justify-content-center {%endif%} ">
+                        {% if user.is_employe == False %}
                         <div class="col-12 col-lg-8 offset-lg-2">
+                            {% else %}
+                        <div class="col-12 col-lg-6">
+                            {% endif %}
                             <div class="wizard-steps">
                                 <div class="wizard-step wizard-step-active">
                                     <a href="#" class="text-white">
@@ -86,6 +91,7 @@
                                         </div>
                                     </a>
                                 </div>
+                                {% if user.is_employe == False %}
                                 <div class="wizard-step wizard-step-active">
                                     <a href="#" class="text-white">
                                         <div class="wizard-step-icon">
@@ -96,6 +102,7 @@
                                         </div>
                                     </a>
                                 </div>
+                                {% endif %}
 
                             </div>
                         </div>
@@ -110,5 +117,5 @@
 {% endblock %}
 
 {%block foot%}
-
+</div>
 {%endblock%}

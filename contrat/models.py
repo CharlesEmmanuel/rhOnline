@@ -2,7 +2,6 @@ from django.db import models
 from employe.models import Employe
 from datetime import datetime, timedelta
 
-
 # Create your models here.
 
 CONTRAT = [
@@ -10,6 +9,7 @@ CONTRAT = [
     ('CDD', 'Contrat à durée déterminé'),
     ('CDI', 'Contrat à durée indéterminé'),
 ]
+
 
 class Contrat(models.Model):
     employe = models.ForeignKey(Employe, related_name='contrat', on_delete=models.SET_NULL, null=True, blank=True)
@@ -40,8 +40,16 @@ class Contrat(models.Model):
 
             duree = (datefin - datedebut).days
 
-            annee,resjours = divmod(duree,365)
-            mois,jours = divmod(resjours,30)
+            annee, resjours = divmod(duree, 365)
+            mois, jours = divmod(resjours, 30)
 
             duree_contrat = f"{annee} Ans {mois} Mois {jours} Jours "
         return duree_contrat
+
+    def getContratType(self):
+        if self.typecontrat == 'STG':
+            return 'Stage'
+        elif self.typecontrat == 'CDD':
+            return 'Contrat à durée déterminée'
+        elif self.typecontrat == 'CDI':
+            return 'Contrat à durée indéterminée'

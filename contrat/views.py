@@ -10,6 +10,8 @@ from employe.models import Employe
 from contrat.models import Contrat
 from django.contrib.auth.decorators import login_required
 
+from employe.permissions import show_permission, access_permission
+
 
 @login_required(login_url="login")
 def liste_empl(request):
@@ -22,64 +24,68 @@ def liste_empl(request):
 
 @login_required(login_url="login")
 def add_contrat(request, pk):
-    try:
-        employe = Employe.objects.get(id=pk)
+    if request.user.is_admin:
+        try:
+            employe = Employe.objects.get(id=pk)
 
-    except employe.DoesNotExist:
-        messages.success(request, "Employé n'existe pas")
+        except employe.DoesNotExist:
+            messages.success(request, "Employé n'existe pas")
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        if not request.POST['contratype'] and not request.POST['debutcontrat']:
+            if not request.POST['contratype'] and not request.POST['debutcontrat']:
 
-            messages.error(request, "Ajout de Contrat Échouée", "danger")
+                messages.error(request, "Ajout de Contrat Échouée", "danger")
+            else:
+
+                typecontrat = request.POST['contratype']
+                datedebut = request.POST['debutcontrat']
+                datefin = request.POST['fincontrat']
+                salairemp = request.POST['paye']
+                missionemp = request.POST['role']
+
+                # Calcul de la durée de contrat
+
+                contrat = Contrat()
+
+                contrat.typecontrat = typecontrat
+                contrat.mission = missionemp
+
+                contrat.datedebut = datedebut
+                contrat.datefin = datefin
+                contrat.salaire = salairemp
+                contrat.employe_id = employe.pk
+
+                contrat.save()
+
+                # Code d'ajout du contrat
+
+                messages.success(request, "Contrat Enrégistré", "success")
+                return redirect('contrat_liste_emp')
         else:
-
-            typecontrat = request.POST['contratype']
-            datedebut = request.POST['debutcontrat']
-            datefin = request.POST['fincontrat']
-            salairemp = request.POST['paye']
-            missionemp = request.POST['role']
-
-            # Calcul de la durée de contrat
-
-            contrat = Contrat()
-
-            contrat.typecontrat = typecontrat
-            contrat.mission = missionemp
-
-            contrat.datedebut = datedebut
-            contrat.datefin = datefin
-            contrat.salaire = salairemp
-            contrat.employe_id = employe.pk
-
-            contrat.save()
-
-            # Code d'ajout du contrat
-
-            messages.success(request, "Contrat Enrégistré", "success")
-            return redirect('contrat_liste_emp')
+            context = {
+                'listing': employe,
+            }
+            return render(request, 'contrat/ajouter_contrat.html', context)
     else:
-        context = {
-            'listing': employe,
-        }
-        return render(request, 'contrat/ajouter_contrat.html', context)
+        return render(request, 'error_pages/errors-404.html')
 
 @login_required(login_url="login")
 def show_contrat(request, pk):
-    employe = Employe.objects.get(id=pk)
+    if show_permission(request, pk):
+        employe = Employe.objects.get(id=pk)
 
-    contrat = Contrat.objects.filter(employe_id=employe.pk, soft_deleting=False)
-    # peut-être une verification pour rediriger l'utilisateur sur la page de liste des employés au cas ou celui ci n'a pas de contrat
-    if contrat:
-        # typcontrat = typecontrat(contrat)
+        contrat = Contrat.objects.filter(employe_id=employe.pk, soft_deleting=False)
+        # peut-être une verification pour rediriger l'utilisateur sur la page de liste des employés au cas ou celui ci n'a pas de contrat
+
         context = {
             'listing': employe,
             'showcontrats': contrat,
         }
         return render(request, 'contrat/list_contrat.html', context)
+
     else:
-        return redirect('contrat_liste_emp')
+        return render(request, 'error_pages/errors-404.html')
 
 
 @login_required(login_url="login")

@@ -11,6 +11,12 @@
 
 <link rel="stylesheet" href="{% static '' %}assets/modules/izitoast/css/iziToast.min.css">
 
+<style>
+
+
+
+</style>
+
 {% endblock %}
 {% block body %}
 
@@ -34,11 +40,12 @@
 
         <div class="section-body">
             <div class="row d-flex justify-content-center">
-            {% if user.is_employe == False %}
+                {% if user.is_admin %}
                 <div class="col-lg-5 d-flex justify-content-center">
                     <div class="card">
                         <div class="card-footer">
-                            <a href="{% url 'create_employe' %}" class="btn btn-success" title="Ajouter Employé" role="button"
+                            <a href="{% url 'create_employe' %}" class="btn btn-success" title="Ajouter Employé"
+                               role="button"
                                aria-pressed="true">
                                 <i class="fas fa-user-plus"></i>
                             </a>
@@ -58,18 +65,11 @@
                                 <table class="table table-striped v_center" id="table-2">
                                     <thead>
                                     <tr>
-                                        <th class="text-center">
-                                            <div class="custom-checkbox custom-control">
-                                                <input type="checkbox" data-checkboxes="mygroup"
-                                                       data-checkbox-role="dad" class="custom-control-input"
-                                                       id="checkbox-all">
-                                                <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
-                                            </div>
-                                        </th>
+                                        <th class="text-center">Agent</th>
                                         <th class="text-center">Nom</th>
                                         <th class="text-center">Email</th>
                                         <th class="text-center">Departement</th>
-                                        {% if user.is_employe == False %}
+                                        {% if user.is_admin%}
                                         <th class="text-center">Action</th>
                                         {%endif%}
                                     </tr>
@@ -77,15 +77,27 @@
                                     <tbody>
                                     {% for i in listing %}
                                     <tr>
+
                                         <td class="text-center">
-                                            <div class="custom-checkbox custom-control">
-                                                <input type="checkbox" data-checkboxes="mygroup"
-                                                       class="custom-control-input" id="checkbox-{{i.id}}">
-                                                <label for="checkbox-{{i.id}}"
-                                                       class="custom-control-label">&nbsp;</label>
-                                            </div>
+                                            <img width="35"
+                                                 alt="image"
+                                                 src="{%if i.photoemp.url != 0 %} {{ i.photoemp.url}} {%else%} {% static '' %}assets/img/avatar/photo_default-2.jpg{%endif%}"
+                                                 class="rounded-circle mr-1">
                                         </td>
-                                        <td class="text-center">{{ i.name }} {{ i.prenom }}</td>
+
+                                        <td class="text-center">
+                                            {% if user.is_admin %}
+                                            <a class="emp_link_redirect text-primary" href="{% url 'employe_fiche' i.id %}"
+                                               data-toggle="tooltip" data-original-title="Voir Fiche">
+                                                {{ i.name }} {{ i.prenom }}
+                                            </a>
+                                            {%else%}
+                                            {{ i.name }} {{ i.prenom }}
+                                            {%endif%}
+
+                                        </td>
+
+
                                         <td class="text-center">{{ i.emailemp }}</td>
                                         <td class="text-center">{{ i.departement }}</td>
 
