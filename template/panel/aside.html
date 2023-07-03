@@ -22,7 +22,9 @@
 <!--        Menu des contrats-->
             <li class="menu-header">Contrat</li>
                 <li><a class="nav-link" href="{% url 'contrat_show' user.employe.id %}"><i class="fas fa-file-signature"></i><span>Fiche Contrat</span></a></li>
+            {% if user.is_admin %}
                 <li><a class="nav-link" href="{% url 'contrat_liste_emp' %}"><i class="fa fa-list"></i><span>Liste</span></a></li>
+            {%endif%}
 
 <!--        Menu des Presence-->
             <li class="menu-header">Presence</li>

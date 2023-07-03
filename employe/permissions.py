@@ -16,11 +16,12 @@ def employe_permission(view_func):
 
 def access_permission(request):
     try:
-        if request.user.is_authenticated and request.user.is_admin == True:
+        if request.user.is_authenticated and request.user.is_admin:
             print('admin')
             return request.user.is_authenticated
         else:
-            return wrapper()
+            print('user')
+            return False
     except Employe.DoesNotExist:
         return False
 

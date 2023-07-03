@@ -15,16 +15,19 @@ from employe.permissions import show_permission, access_permission
 
 @login_required(login_url="login")
 def liste_empl(request):
-    employe_list = Employe.objects.filter(soft_deleting=False)
-    context = {
-        'listing': employe_list
-    }
-    return render(request, 'contrat/liste_emp.html', context)
+    if access_permission(request):
+        employe_list = Employe.objects.filter(soft_deleting=False)
+        context = {
+            'listing': employe_list
+        }
+        return render(request, 'contrat/liste_emp.html', context)
+    else:
+        return render(request, 'error_pages/errors-404.html')
 
 
 @login_required(login_url="login")
 def add_contrat(request, pk):
-    if request.user.is_admin:
+    if access_permission(request):
         try:
             employe = Employe.objects.get(id=pk)
 
@@ -70,6 +73,7 @@ def add_contrat(request, pk):
     else:
         return render(request, 'error_pages/errors-404.html')
 
+
 @login_required(login_url="login")
 def show_contrat(request, pk):
     if show_permission(request, pk):
@@ -90,54 +94,60 @@ def show_contrat(request, pk):
 
 @login_required(login_url="login")
 def edit_contrat(request, pk):
-    try:
-        contrat = Contrat.objects.get(id=pk)
-        employe = Employe.objects.get(id=contrat.employe_id)
+    if access_permission(request):
+        try:
+            contrat = Contrat.objects.get(id=pk)
+            employe = Employe.objects.get(id=contrat.employe_id)
 
-    except contrat.DoesNotExist:
-        messages.success(request, "Contrat n'existe pas")
+        except contrat.DoesNotExist:
+            messages.success(request, "Contrat n'existe pas")
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        if not request.POST['contratype'] and not request.POST['debutcontrat']:
+            if not request.POST['contratype'] and not request.POST['debutcontrat']:
 
-            messages.error(request, "Mise à jour de Contrat Échouée", "danger")
+                messages.error(request, "Mise à jour de Contrat Échouée", "danger")
+            else:
+
+                typecontrat = request.POST['contratype']
+                datedebut = request.POST['debutcontrat']
+                datefin = request.POST['fincontrat']
+                salairemp = request.POST['paye']
+                missionemp = request.POST['role']
+
+                # Calcul de la durée de contrat
+
+                contrat.typecontrat = typecontrat
+                contrat.mission = missionemp
+
+                contrat.datedebut = datedebut
+                contrat.datefin = datefin
+                contrat.salaire = salairemp
+                contrat.employe_id = employe.pk
+
+                contrat.save()
+
+                idemp = employe.pk
+
+                messages.success(request, "Modification Effectuée", "success")
+                return redirect(reverse('contrat_show',args=[idemp]))
+
         else:
-
-            typecontrat = request.POST['contratype']
-            datedebut = request.POST['debutcontrat']
-            datefin = request.POST['fincontrat']
-            salairemp = request.POST['paye']
-            missionemp = request.POST['role']
-
-            # Calcul de la durée de contrat
-
-            contrat.typecontrat = typecontrat
-            contrat.mission = missionemp
-
-            contrat.datedebut = datedebut
-            contrat.datefin = datefin
-            contrat.salaire = salairemp
-            contrat.employe_id = employe.pk
-
-            contrat.save()
-
-            idemp = employe.pk
-
-            messages.success(request, "Modification Effectuée", "success")
-            return redirect(reverse('contrat_show',args=[idemp]))
-
+            context = {
+                'listing': employe,
+                'showcontrats': contrat,
+            }
+            return render(request, 'contrat/edit_contrat.html', context)
     else:
-        context = {
-            'listing': employe,
-            'showcontrats': contrat,
-        }
-        return render(request, 'contrat/edit_contrat.html', context)
+        return render(request, 'error_pages/errors-404.html')
+
+
 
 
 
 @login_required(login_url="login")
 def del_contrat(request, pk):
+    if access_permission(request):
         try:
             contrat = Contrat.objects.get(id=pk)
             employe = Employe.objects.get(id=contrat.employe_id)
@@ -153,3 +163,5 @@ def del_contrat(request, pk):
         idemp = employe.pk
 
         return redirect(reverse('contrat_show', args=[idemp]))
+    else:
+        return render(request, 'error_pages/errors-404.html')
