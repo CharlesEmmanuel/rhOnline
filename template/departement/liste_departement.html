@@ -5,7 +5,8 @@
 
 <!-- CSS Libraries -->
 <link rel="stylesheet" href="{% static '' %}assets/modules/datatables/datatables.min.css">
-<link rel="stylesheet" href="{% static '' %}assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet"
+      href="{% static '' %}assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
 
 <link rel="stylesheet" href="{% static '' %}assets/modules/izitoast/css/iziToast.min.css">
@@ -25,11 +26,11 @@
             </div>
         </div>
 
-{% if messages %}
-{% for message in messages%}
-    <div class="alert alert-{{message.tags}}">{{message}}.</div>
-{%endfor%}
-{% endif %}
+        {% if messages %}
+        {% for message in messages%}
+        <div class="alert alert-{{message.tags}}">{{message}}.</div>
+        {%endfor%}
+        {% endif %}
 
         <div class="section-body">
             <div class="row">
@@ -44,10 +45,20 @@
                             <div class="card-body">
                                 {{ forms.as_p }}
                             </div>
+
+
                             <div class="card-footer text-center">
                                 <button class="btn btn-primary">Enregistrer</button>
                             </div>
                         </form>
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div class="mb-2">Success Message</div>
+                                    <button class="btn btn-primary" id="toastr-2">Launch</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,23 +88,24 @@
                                     </thead>
                                     <tbody>
                                     {% for i in listing %}
-                                        <tr>
-                                            <td class="text-center">
-                                                <div class="custom-checkbox custom-control">
-                                                    <input type="checkbox" data-checkboxes="mygroup"
-                                                           class="custom-control-input" id="checkbox-{{i.id}}">
-                                                    <label for="checkbox-{{i.id}}" class="custom-control-label">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">{{ i.name }}</td>
-                                            <td class="text-center">{{ i.description }}</td>
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-checkbox custom-control">
+                                                <input type="checkbox" data-checkboxes="mygroup"
+                                                       class="custom-control-input" id="checkbox-{{i.id}}">
+                                                <label for="checkbox-{{i.id}}"
+                                                       class="custom-control-label">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ i.name }}</td>
+                                        <td class="text-center">{{ i.description }}</td>
 
-                                            <td class="text-center">
-                                                <a href="{% url 'edit_departement' i.id %}" class="btn btn-secondary">Modifier</a>
-                                                <a href="{% url 'delete_departement' i.id %}" class="btn btn-danger">Supprimer</a>
-                                            </td>
+                                        <td class="text-center">
+                                            <a href="{% url 'edit_departement' i.id %}" class="btn btn-secondary">Modifier</a>
+                                            <a href="{% url 'delete_departement' i.id %}" class="btn btn-danger">Supprimer</a>
+                                        </td>
 
-                                        </tr>
+                                    </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>

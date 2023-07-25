@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\Project\RHONLINE\rhOnline\venv"
+VIRTUAL_ENV="D:\Perso\SOUTENANCE_DOC\APPLICATION\rhOnline\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

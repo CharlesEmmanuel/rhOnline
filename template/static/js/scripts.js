@@ -1,4 +1,4 @@
-    "use strict";
+"use strict";
 
 // ChartJS
 if(window.Chart) {
@@ -424,9 +424,6 @@ $("[data-collapse]").each(function() {
     return false;
     });
 });
-
-
-
 
 // Gallery
 $(".gallery .gallery-item").each(function() {

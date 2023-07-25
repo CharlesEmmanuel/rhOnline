@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from home.views import dashboard, login_user, pointage_page, entry, sortie, logout_view
+from home.views import dashboard, login_user, pointage_page, logout_view
 
 from mysite import settings
 
@@ -18,7 +18,5 @@ urlpatterns = [
 
     path('dashboard', dashboard, name='dashboard'),
 
-    path('entree', entry, name='entry'),
-    path('sortie', sortie, name='exit_'),
 
 ]

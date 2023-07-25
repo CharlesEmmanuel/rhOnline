@@ -54,6 +54,7 @@ class MyAccountManager(BaseUserManager):
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
+            user_type='AD',
             password=password,
         )
         user.is_admin = True

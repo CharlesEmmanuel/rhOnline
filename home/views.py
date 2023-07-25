@@ -49,15 +49,3 @@ def logout_view(request):
 def pointage_page(request):
     return render(request, 'home/pointage.html')
     # return redirect('home')
-
-
-# def home_page(request):
-#     return render(request, 'home/home.html')
-
-
-def entry(request):
-    return render(request, 'home/entree.html')
-
-
-def sortie(request):
-    return render(request, 'home/sortie.html')

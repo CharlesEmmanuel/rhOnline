@@ -72,18 +72,26 @@ def update_attendance_in_db_out(face_id):
 
 def checkin_face(request):
     face_id = facerecognition.recognizeFace()
-    users = Employe.objects.get(faceid=face_id)
+    employe = Employe.objects.get(faceid=face_id)
 
     update_attendance_in_db_in(face_id)
-    return redirect('liste_presence')
 
+    context = {
+        'listing': employe
+    }
+    return render(request, 'presence/user_scanned.html', context)
 
 def checkout_face(request):
     face_id = facerecognition.recognizeFace()
     print(face_id)
     users = Employe.objects.get(faceid=face_id)
     update_attendance_in_db_out(face_id)
-    return redirect('liste_presence')
+
+    employe_list = Employe.objects.filter(soft_deleting=False)
+    context = {
+        'listing': employe_list
+    }
+    return render(request, 'presence/user_scanned.html', context)
 
 
 def liste_presence(request):

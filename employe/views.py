@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView
 
@@ -17,6 +18,21 @@ facerecognition = FaceRecognition()
 
 # Create your views here.
 
+def save_image(request):
+    if request.method == 'POST':
+        captured_image = request.POST.get('image')
+        # Traitez l'image capturée et sauvegardez-la dans votre modèle Employee
+
+        # Exemple de code pour sauvegarder l'image dans un modèle Employee
+        # employee = Employee.objects.get(user=request.user)
+        # employee.image = captured_image
+        # employee.save()
+
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False})
+def stream(request):
+    return render(request, 'employe/scan.html')
 
 @login_required(login_url="login")
 # @permission_required(Account.user_type,login_url="login")
@@ -43,6 +59,9 @@ def liste_departement(request):
     }
 
     return render(request, 'departement/liste_departement.html', context)
+
+# def toastr(request):
+#     return render(request, 'employe/toastr.html')
 
 
 @login_required(login_url="login")
@@ -253,8 +272,8 @@ class EmployeCreateView(CreateView):
             nbreenf = request.POST['enfants']
             numurgence = request.POST['casurgence']
 
-            print("valeur de l'image....")
-            print(request.POST['fichier'])
+            # print("valeur de l'image....")
+            # print(request.POST['fichier'])
 
 
             employe = Employe()
@@ -279,11 +298,13 @@ class EmployeCreateView(CreateView):
             employe.statutmat = statutmat
             employe.nbrechild = nbreenf
             employe.contacturgence = numurgence
-            if request.POST['fichier'] != '':
+
+            if request.FILES['fichier']:
                 employe.photoemp = request.FILES['fichier']
             employe.save()
-
-            # addFace(employe.faceid)
+            print("la valeur de face id est:")
+            print(employe.faceid)
+            addFace(employe.faceid)
 
 
 # Fonction listing des employes
@@ -388,7 +409,7 @@ def edit_employe(request, pk):
         return render(request, 'employe/edit_employe.html', context)
 
 
-@login_required(login_url="login")
+# @login_required(login_url="login")
 def addFace(face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)
@@ -396,7 +417,7 @@ def addFace(face_id):
     return redirect('/')
 
 
-@login_required(login_url="login")
+# @login_required(login_url="login")
 def scanFace(request, face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)

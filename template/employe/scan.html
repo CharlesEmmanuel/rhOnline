@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Capture d'image</title>
+</head>
+<body>
+    <h1>Capture d'image</h1>
+    <button id="captureButton">Capturer l'image</button>
+
+    <video id="video" autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <div id="imageContainer">
+        <h2>Image capturée :</h2>
+        <img id="capturedImage" alt="Image capturée" style="display: none;">
+    </div>
+
+    <script>
+        // Récupérer la référence du bouton de capture
+        const captureButton = document.getElementById('captureButton');
+
+        // Récupérer la référence du conteneur d'image
+        const imageContainer = document.getElementById('imageContainer');
+
+        // Écouter l'événement de clic sur le bouton de capture
+        captureButton.addEventListener('click', function() {
+            // Accéder à la caméra du navigateur
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    const video = document.getElementById('video');
+                    const canvas = document.getElementById('canvas');
+                    const context = canvas.getContext('2d');
+                    const capturedImageElement = document.getElementById('capturedImage');
+
+                    // Afficher la vidéo dans l'élément video
+                    video.srcObject = stream;
+
+                    // Lorsque la vidéo est prête, capturer l'image
+                    video.addEventListener('loadedmetadata', function() {
+                        // Définir la taille du canvas pour correspondre à la vidéo
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        // Dessiner la vidéo sur le canvas
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        // Convertir le contenu du canvas en une URL de données (data URL)
+                        const capturedImage = canvas.toDataURL();
+
+                        // Afficher l'image capturée dans le conteneur d'image
+                        capturedImageElement.src = capturedImage;
+                        capturedImageElement.style.display = 'block';
+
+                        // Afficher le conteneur d'image
+                        imageContainer.style.display = 'block';
+
+                        // Envoyer l'image capturée au serveur pour la sauvegarder
+                        // Vous pouvez utiliser une requête AJAX pour cela
+
+                        // Exemple de requête AJAX avec fetch
+                        fetch('/save_image/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ image: capturedImage }),
+                        })
+                            .then(function(response) {
+                                // Gérer la réponse du serveur
+                                console.log('Image sauvegardée avec succès');
+                            })
+                            .catch(function(error) {
+                                // Gérer les erreurs lors de l'envoi de l'image au serveur
+                                console.error('Erreur lors de la sauvegarde de l\'image :', error);
+                            });
+                    });
+                })
+                .catch(function(error) {
+                    // Gérer les erreurs liées à l'accès à la caméra
+                    console.error('Erreur lors de l\'accès à la caméra :', error);
+                });
+        });
+    </script>
+</body>
+</html>

@@ -2,16 +2,16 @@
 
 $("#toastr-1").click(function() {
   iziToast.info({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made iziToast toastr',
+    title: 'Hello, BOAOOOOO!',
+    message: 'OOOOOOOOOOOOOOO awesome plugin is made iziToast toastr',
     position: 'topRight'
   });
 });
 
-$("#toastr-2")(function() {
+$("#toastr-2").click(function() {
   iziToast.success({
-    title: 'Success',
-    message: '{message}',
+    title: 'Hello, BIIIIIIIIII!',
+    message: 'AAAAAAAAAAAAAAAAAAAAAAA awesome plugin is made by iziToast',
     position: 'topRight'
   });
 });

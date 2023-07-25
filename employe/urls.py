@@ -1,7 +1,7 @@
 from django.urls import path
 from employe.views import liste_departement, delete_departement, liste_poste, delete_poste, edit_poste, liste_liemploi, \
     edit_liemploi, delete_liemploi, liste_emp, EmployeCreateView, delete_employe, edit_employe, scanFace, \
-    fiche_employe
+    fiche_employe, stream
 
 urlpatterns = [
     # Departements links
@@ -35,6 +35,7 @@ urlpatterns = [
 
     path('delete/<int:pk>', delete_employe, name='delete_employe'),
     path('edit/<int:pk>', edit_employe, name='edit_employe'),
+    path('stream/', stream, name="scan"),
 
     path('fiche/<int:pk>', fiche_employe, name='employe_fiche'),
 
