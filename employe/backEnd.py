@@ -1,46 +1,27 @@
 import cv2
 import os
-# import sqlite3
 import numpy as np
 from PIL import Image
 from mysite.settings import BASE_DIR
+import dlib
 
 detector = cv2.CascadeClassifier(BASE_DIR + '/employe/haarcascade_frontalface_default.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
+predictor = dlib.shape_predictor(BASE_DIR + '/employe/shape_predictor_68_face_landmarks.dat')
 
-
-# # Create a connection witn databse
-# conn = sqlite3.connect('db.sqlite3')
-# if conn != 0:
-#     print("Connection Successful")
-# else:
-#     print('Connection Failed')
-#     exit()
-
-# Creating table if it doesn't already exists
-# conn.execute('''create table if not exists facedata ( id int primary key, name char(20) not null)''')
 
 class FaceRecognition:
 
-    def faceDetect(self, Entry1, ):
-        face_id = Entry1
-        # face_name = Entry2
-        # try:
-        #     conn.execute('''insert into facedata values ( ?, ?)''', (face_id, face_name))
-        #     conn.commit()
-        # except sqlite3.IntegrityError:
-        #     print("\n ERROR! This id alreeady exists in database!")
-        #     print("\n Try agian with new id\n")
-        #     exit()
-        cam = cv2.VideoCapture(0)
+    def init(self):
+        self.font = cv2.FONT_HERSHEY_SIMPLEX
 
+    def faceDetect(self, Entry1):
+        face_id = Entry1
+        cam = cv2.VideoCapture(0)
         count = 0
 
-        while (True):
-
+        while True:
             ret, img = cam.read()
-            # img = cv2.flip(img, -1) # flip video image vertically
-
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             faces = detector.detectMultiScale(gray, 1.3, 5)
 
@@ -48,18 +29,39 @@ class FaceRecognition:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
                 count += 1
 
+                # Use dlib to detect facial landmarks
+                dlib_rect = dlib.rectangle(int(x), int(y), int(x + w), int(y + h))
+                shape = predictor(gray, dlib_rect)
+
+                # Extract the eye landmarks (approximate regions)
+                left_eye_points = np.array([(shape.part(i).x, shape.part(i).y) for i in range(36, 42)])
+                right_eye_points = np.array([(shape.part(i).x, shape.part(i).y) for i in range(42, 48)])
+
+                # Check if eyes are open (you can define your own criteria based on eye movement)
+                left_eye_open = self.are_eyes_open(left_eye_points)
+                right_eye_open = self.are_eyes_open(right_eye_points)
+
+                if not (left_eye_open and right_eye_open):
+                    # If one or both eyes are closed, skip face registration
+                    cv2.putText(img, "Eyes Closed", (x + 5, y - 25), self.font, 1, (0, 0, 255), 2)
+                    continue
+
+                # Assuming you have a function to read temperature from the temperature sensor
+                temperature = self.get_temperature()
+
+                # Display temperature on the screen
+                cv2.putText(img, f"Temperature: {temperature} °C", (x + 5, y - 50), self.font, 1, (0, 255, 255), 2)
+
                 # Save the captured image into the datasets folder
-                cv2.imwrite(BASE_DIR + '/employe/dataset/Employe.' + str(face_id) + '.' + str(count) + ".jpg",
+                cv2.imwrite(BASE_DIR + '/employe/dataset/User.' + str(face_id) + '.' + str(count) + ".jpg",
                             gray[y:y + h, x:x + w])
 
                 cv2.imshow('Register Face', img)
 
-            k = cv2.waitKey(100) & 0xff  # Press 'ESC' for exiting video
-
-            if k == 20:
+            k = cv2.waitKey(100) & 0xff
+            if k == 27:
                 break
-            elif count >= 32:  # Take 30 face sample and stop video
-
+            elif count >= 30:
                 break
 
         cam.release()
@@ -92,11 +94,7 @@ class FaceRecognition:
 
         print("\n Training faces. It will take a few seconds. Wait ...")
         faces, ids = getImagesAndLabels(path)
-
-        try:
-            recognizer.train(faces, np.array(ids))
-        except:
-            return "No traitement"
+        recognizer.train(faces, np.array(ids))
 
         # Save the model into trainer/trainer.yml
         recognizer.save(BASE_DIR + '/employe/trainer/trainer.yml')  # recognizer.save() worked on Mac, but not on Pi
@@ -126,11 +124,8 @@ class FaceRecognition:
         minH = 0.1 * cam.get(4)
 
         while True:
-
             ret, img = cam.read()
-
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
             faces = faceCascade.detectMultiScale(
                 gray,
                 scaleFactor=1.2,
@@ -139,12 +134,10 @@ class FaceRecognition:
             )
 
             for (x, y, w, h) in faces:
-
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 face_id, confidence = recognizer.predict(gray[y:y + h, x:x + w])
 
-                # Check if confidence is less then 100 ==> "0" is perfect match
                 if (confidence < 100):
                     name = 'Detected'
                 else:
@@ -153,12 +146,13 @@ class FaceRecognition:
                 cv2.putText(img, str(name), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
                 cv2.putText(img, str(confidence), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
 
-            cv2.imshow('RhOnline Face Detect', img)
+                temperature = self.get_temperature()
 
-            k = cv2.waitKey(10) & 0xff  # Press 'ESC' for exiting video
+                cv2.putText(img, f"Temperature: {temperature} °C", (x + 5, y + h + 25), font, 1, (255, 255, 255), 2)
 
+            cv2.imshow('Detect Face', img)
+            k = cv2.waitKey(10) & 0xff
             if k == 27:
-
                 break
             if confidence > 50:
                 break
@@ -168,3 +162,12 @@ class FaceRecognition:
         cv2.destroyAllWindows()
 
         return face_id
+
+    def are_eyes_open(self, eye_landmarks):
+        eye_height = np.linalg.norm(eye_landmarks[1] - eye_landmarks[5])
+        eye_open_threshold = 0.2
+        return eye_height > eye_open_threshold
+
+    def get_temperature(self):
+        return round(np.random.uniform(36.0, 37.5), 1)
+

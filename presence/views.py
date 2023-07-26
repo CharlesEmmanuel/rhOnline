@@ -79,7 +79,7 @@ def checkin_face(request):
     context = {
         'listing': employe
     }
-    return render(request, 'presence/user_scanned.html', context)
+    return render(request, 'presence/user_scanned_new.html', context)
 
 def checkout_face(request):
     face_id = facerecognition.recognizeFace()
