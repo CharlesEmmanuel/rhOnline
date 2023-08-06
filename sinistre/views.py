@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 
+from employe.permissions import show_permission
 from sinistre.models import Employe
 from sinistre.models import Sinistre
 
@@ -20,58 +21,64 @@ def liste_empl(request):
 
 
 def add_sinistre(request, pk):
-    try:
-        employe = Employe.objects.get(id=pk)
+    if show_permission(request, pk):
+        try:
+            employe = Employe.objects.get(id=pk)
 
-    except employe.DoesNotExist:
-        messages.success(request, "Employé n'existe pas")
+        except employe.DoesNotExist:
+            messages.success(request, "Employé n'existe pas")
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        if not request.POST['explain'] and not request.POST['datedeclaration']:
+            if not request.POST['explain'] and not request.POST['datedeclaration']:
 
-            messages.error(request, "Ajout de sinistre Échouée", "danger")
+                messages.error(request, "Ajout de sinistre Échouée", "danger")
+            else:
+
+                dateevent = request.POST['datedeclaration']
+                description = request.POST['explain']
+
+                # Calcul de la durée de sinistre
+
+                sinistre = Sinistre()
+
+                sinistre.description = description
+
+                sinistre.datesinistre = dateevent
+                sinistre.employe_id = employe.pk
+
+                sinistre.save()
+
+                # Code d'ajout du sinistre
+                idemp = employe.pk
+                messages.success(request, "sinistre Enrégistré", "success")
+
+                return redirect(reverse('sinistre_show', args=[idemp]))
+
         else:
-
-            dateevent = request.POST['datedeclaration']
-            description = request.POST['explain']
-
-            # Calcul de la durée de sinistre
-
-            sinistre = Sinistre()
-
-            sinistre.description = description
-
-            sinistre.datesinistre = dateevent
-            sinistre.employe_id = employe.pk
-
-            sinistre.save()
-
-            # Code d'ajout du sinistre
-            idemp = employe.pk
-            messages.success(request, "sinistre Enrégistré", "success")
-
-            return redirect(reverse('sinistre_show', args=[idemp]))
-
+            context = {
+                'listing': employe,
+            }
+            return render(request, 'sinistre/ajouter_sinistre.html', context)
     else:
-        context = {
-            'listing': employe,
-        }
-        return render(request, 'sinistre/ajouter_sinistre.html', context)
+        return render(request, 'error_pages/errors-404.html')
 
 
 def show_sinistre(request, pk):
-    employe = Employe.objects.get(id=pk)
+    if show_permission(request, pk):
+        employe = Employe.objects.get(id=pk)
 
-    sinistre = Sinistre.objects.filter(employe_id=employe.pk, soft_deleting=False)
-    # peut-être une verification pour rediriger l'utilisateur sur la page de liste des employés au cas ou celui ci n'a pas de sinistre
+        sinistre = Sinistre.objects.filter(employe_id=employe.pk, soft_deleting=False)
+        # peut-être une verification pour rediriger l'utilisateur sur la page de liste des employés au cas ou celui ci n'a pas de sinistre
 
-    # typsinistre = typesinistre(sinistre)
-    context = {
-        'listing': employe,
-        'showsinistres': sinistre,
-    }
-    return render(request, 'sinistre/list_sinistre.html', context)
+        # typsinistre = typesinistre(sinistre)
+        context = {
+            'listing': employe,
+            'showsinistres': sinistre,
+        }
+        return render(request, 'sinistre/list_sinistre.html', context)
+    else:
+        return render(request, 'error_pages/errors-404.html')
 
 
 def edit_sinistre(request, pk):

@@ -1,20 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 import datetime
-import math
-import matplotlib.pyplot as plt
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from matplotlib import rcParams
-# Create your views here.
 from employe.models import Employe
-from presence.models import Pointage
-from django_pandas.io import read_frame
 from presence.models import Pointage,Presence
-from pandas.plotting import register_matplotlib_converters
-import seaborn as sns
-from django.contrib import messages
-
 from employe.backEnd import FaceRecognition
+from django.contrib import messages
+from employe.permissions import show_permission, access_permission
 
 facerecognition = FaceRecognition()
 def update_attendance_in_db_in(face_id):
@@ -43,6 +33,7 @@ def update_attendance_in_db_in(face_id):
             print("Message : Bienvenue")
             # requette.present = True
             # requette.save(update_fields=['present'])
+            return requette
 
 def update_attendance_in_db_out(face_id):
     today = datetime.date.today()
@@ -72,12 +63,16 @@ def update_attendance_in_db_out(face_id):
 
 def checkin_face(request):
     face_id = facerecognition.recognizeFace()
-    employe = Employe.objects.get(faceid=face_id)
+    print(face_id)
+    print(face_id)
+    employe_scanned = Employe.objects.get(faceid=face_id)
 
-    update_attendance_in_db_in(face_id)
+    timer = update_attendance_in_db_in(face_id)
 
     context = {
-        'listing': employe
+        'employe': employe_scanned,
+        'typetag' : "d'arrivée",
+        'timer' : timer
     }
     return render(request, 'presence/user_scanned_new.html', context)
 
@@ -85,17 +80,26 @@ def checkout_face(request):
     face_id = facerecognition.recognizeFace()
     print(face_id)
     users = Employe.objects.get(faceid=face_id)
-    update_attendance_in_db_out(face_id)
+    # update_attendance_in_db_out(face_id)
 
-    employe_list = Employe.objects.filter(soft_deleting=False)
+    employe_scanned = Employe.objects.filter(soft_deleting=False)
     context = {
-        'listing': employe_list
+        'employe': employe_scanned
     }
-    return render(request, 'presence/user_scanned.html', context)
-
+    return render(request, 'presence/user_scanned_new.html', context)
 
 def liste_presence(request):
-    presence_liste = Presence.objects.all()
+    if access_permission(request):
+        presence_liste = Presence.objects.all()
+    else:
+        pk = request.user.id
+        try:
+            employe = Employe.objects.get(account=pk)
+            presence_liste = Presence.objects.filter(employe=employe).order_by('-id')
+
+        except employe.DoesNotExist:
+            messages.success(request, "Employé n'existe pas")
+
     context = {
         'listing': presence_liste
     }

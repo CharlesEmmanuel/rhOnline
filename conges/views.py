@@ -7,6 +7,8 @@ from conges.forms import TypecongesForm
 from conges.models import Conges, Typeconges
 from employe.models import Employe
 from django.contrib.auth.decorators import login_required
+from employe.permissions import employe_permission, show_permission
+
 
 
 # Class Parametres des type de congés
@@ -88,66 +90,72 @@ def liste_empl(request):
 
 @login_required(login_url="login")
 def add_conges(request, pk):
-    try:
-        employe = Employe.objects.get(id=pk)
-        typeconges_list = Typeconges.objects.all()
+    if show_permission(request, pk):
+        try:
+            employe = Employe.objects.get(id=pk)
+            typeconges_list = Typeconges.objects.all()
 
-    except employe.DoesNotExist:
-        messages.success(request, "Employé n'existe pas")
+        except employe.DoesNotExist:
+            messages.success(request, "Employé n'existe pas")
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        if not request.POST['congesype'] and not request.POST['debutconges']:
+            if not request.POST['congesype'] and not request.POST['debutconges']:
 
-            messages.error(request, "Ajout de conges Échouée", "danger")
+                messages.error(request, "Ajout de conges Échouée", "danger")
+            else:
+                typecong = request.POST['congesype']
+                datedebut = request.POST['debutconges']
+                datefin = request.POST['finconges']
+                description = request.POST['explain']
+
+                state = 'NEW'
+
+                # Calcul de la durée de conges
+
+                conges = Conges()
+
+                conges.typeconges_id = typecong
+                conges.description = description
+                conges.etatconges = state
+
+                conges.datedebut = datedebut
+                conges.datefin = datefin
+                conges.employe_id = employe.pk
+
+                conges.save()
+
+                # Code d'ajout du conges
+                idemp = employe.pk
+
+                messages.success(request, "conges Enrégistré", "success")
+                return redirect(reverse('conges_show',args=[idemp]))
         else:
-            typecong = request.POST['congesype']
-            datedebut = request.POST['debutconges']
-            datefin = request.POST['finconges']
-            description = request.POST['explain']
-
-            state = 'NEW'
-
-            # Calcul de la durée de conges
-
-            conges = Conges()
-
-            conges.typeconges_id = typecong
-            conges.description = description
-            conges.etatconges = state
-
-            conges.datedebut = datedebut
-            conges.datefin = datefin
-            conges.employe_id = employe.pk
-
-            conges.save()
-
-            # Code d'ajout du conges
-            idemp = employe.pk
-
-            messages.success(request, "conges Enrégistré", "success")
-            return redirect(reverse('conges_show',args=[idemp]))
+            context = {
+                'listing': employe,
+                'typeconges': typeconges_list
+            }
+            return render(request, 'conges/ajouter_conges.html', context)
     else:
+        return render(request, 'error_pages/errors-404.html')
+
+
+@login_required(login_url="login")
+def show_conges(request, pk):
+    if show_permission(request, pk):
+        employe = Employe.objects.get(id=pk)
+
+        conges = Conges.objects.filter(employe_id=employe.pk, soft_deleting=False)
+        # peut-être une verification pour rediriger l'utilisateur sur la page de liste des employés au cas ou celui ci n'a pas de conges
+
+        # typconges = typeconges(conges)
         context = {
             'listing': employe,
-            'typeconges': typeconges_list
+            'showconges': conges,
         }
-        return render(request, 'conges/ajouter_conges.html', context)
-
-
-# @login_required(login_url="login")
-def show_conges(request, pk):
-    employe = Employe.objects.get(id=pk)
-
-    conges = Conges.objects.filter(employe_id=employe.pk, soft_deleting=False)
-    # peut-être une verification pour rediriger l'utilisateur sur la page de liste des employés au cas ou celui ci n'a pas de conges
-
-    # typconges = typeconges(conges)
-    context = {
-        'listing': employe,
-        'showconges': conges,
-    }
-    return render(request, 'conges/list_conges.html', context)
+        return render(request, 'conges/list_conges.html', context)
+    else:
+        return render(request, 'error_pages/errors-404.html')
 
 
 
@@ -169,13 +177,6 @@ def submit_conges(request, pk):
 
     messages.success(request, "Demande Envoyée", "success")
     return redirect(reverse('conges_show',args=[idemp]))
-
-
-
-
-
-
-
 
 
 

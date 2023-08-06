@@ -7,41 +7,58 @@
             <a href="{% url 'dashboard' %}">RH</a>
         </div>
         <ul class="sidebar-menu">
-        <!--Menu Parametre-->
+            <!--Menu Parametre-->
             {% if user.is_employe == False %}
             <li class="menu-header">Settings</li>
-                <li><a class="nav-link" href="{% url 'liste_departement' %}"><i class="fa fa-building"></i><span>Departement</span></a></li>
-                <li><a class="nav-link" href="{% url 'liste_poste' %}"><i class="fa fa-briefcase"></i> </i> <span>Poste</span></a></li>
-                <li><a class="nav-link" href="{% url 'liste_liemploi' %}"><i class="fa fa-map-marker"></i> </i> <span>Lieu Emploie</span></a></li>
-                <li><a class="nav-link" href="{% url 'add_tconges' %}"><i class="fas fa-calendar-week"></i> <span>Type de Congés</span></a></li>
+            <li><a class="nav-link" href="{% url 'liste_departement' %}"><i
+                    class="fa fa-building"></i><span>Departement</span></a></li>
+            <li><a class="nav-link" href="{% url 'liste_poste' %}"><i class="fa fa-briefcase"></i> </i>
+                <span>Poste</span></a></li>
+            <li><a class="nav-link" href="{% url 'liste_liemploi' %}"><i class="fa fa-map-marker"></i> </i> <span>Lieu Emploie</span></a>
+            </li>
+            <li><a class="nav-link" href="{% url 'add_tconges' %}"><i class="fas fa-calendar-week"></i> <span>Type de Congés</span></a>
+            </li>
             {% endif %}
-<!--            Menu de employe-->
+            <!--            Menu de employe-->
             <li class="menu-header">Employé</li>
-                <li><a class="nav-link" href="{%if user.is_employe == False %} {% url 'create_employe' %} {%else%} {% url 'employe_fiche' user.employe.id %} {%endif%}"><i class="fa fa-user"></i><span>Employé</span></a></li>
-                <li><a class="nav-link" href="{% url 'liste_employe' %}"><i class="fa fa-search"></i> </i> <span>Recherche</span></a></li>
-<!--        Menu des contrats-->
+            <li><a class="nav-link"
+                   href="{%if user.is_employe == False %} {% url 'create_employe' %} {%else%} {% url 'employe_fiche' user.employe.id %} {%endif%}"><i
+                    class="fa fa-user"></i><span>Employé</span></a></li>
+            <li><a class="nav-link" href="{% url 'liste_employe' %}"><i class="fa fa-search"></i> </i>
+                <span>Recherche</span></a></li>
+            <!--        Menu des contrats-->
             <li class="menu-header">Contrat</li>
-                <li><a class="nav-link" href="{% url 'contrat_show' user.employe.id %}"><i class="fas fa-file-signature"></i><span>Fiche Contrat</span></a></li>
+            <li><a class="nav-link" href="{% url 'contrat_show' user.employe.id %}"><i
+                    class="fas fa-file-signature"></i><span>Fiche Contrat</span></a></li>
             {% if user.is_admin %}
-                <li><a class="nav-link" href="{% url 'contrat_liste_emp' %}"><i class="fa fa-list"></i><span>Liste</span></a></li>
+            <li><a class="nav-link" href="{% url 'contrat_liste_emp' %}"><i
+                    class="fa fa-list"></i><span>Liste</span></a></li>
             {%endif%}
 
-<!--        Menu des Presence-->
+            <!--        Menu des Presence-->
             <li class="menu-header">Presence</li>
-                <li><a class="nav-link" href="blank.html"><i class="fa fa-calendar-check"></i><span>Recap</span></a></li>
-                <li><a class="nav-link" href="{% url 'liste_presence' %}"><i class="fa fa-list"></i><span>Liste</span></a></li>
-<!--        Menu des Congés-->
+            <li><a class="nav-link" href="blank.html"><i class="fa fa-calendar-check"></i><span>Recap</span></a></li>
+            <li><a class="nav-link" href="{% url 'liste_presence' %}"><i class="fa fa-list"></i><span>Liste</span></a>
+            </li>
+            <!--        Menu des Congés-->
             <li class="menu-header">Congés</li>
-                <li><a class="nav-link" href="{% url 'conges_liste_emp' %}"><i class="fa fa-plus-circle"></i><span>Ajouter</span></a></li>
-                <li><a class="nav-link" href="blank.html"><i class="fa fa-list"></i><span>Liste</span></a></li>
-<!--        Menu des Sinistre-->
+            <li><a class="nav-link" href="{%if user.is_employe == False %} {% url 'conges_liste_emp' %} {%else%} {% url 'conges_ajout' user.employe.id %} {%endif%}">
+                <i class="fa fa-plus-circle"></i><span>Ajouter</span></a>
+            </li>
+            <li><a class="nav-link" href="{%if user.is_employe == False %} {% url 'conges_liste_emp' %} {%else%} {% url 'conges_show' user.employe.id %} {%endif%}"><i class="fa fa-list"></i><span>Liste</span></a></li>
+            <!--        Menu des Sinistre-->
             <li class="menu-header">Sinistres</li>
-                <li><a class="nav-link" href="{% url 'sinistre_liste_emp' %}"><i class="fa fa-plus-circle"></i><span>Ajouter</span></a></li>
-                <li><a class="nav-link" href="#"><i class="fa fa-list"></i><span>Liste</span></a></li>
+            <li><a class="nav-link" href="{%if user.is_employe == False %} {% url 'sinistre_liste_emp' %} {%else%} {% url 'sinistre_ajout' user.employe.id %} {%endif%}">
+                <i class="fa fa-plus-circle"></i><span>Ajouter</span></a>
+            </li>
+            <li><a class="nav-link" href="{%if user.is_employe == False %} {% url 'sinistre_liste_emp' %} {%else%} {% url 'sinistre_show' user.employe.id %} {%endif%}">
+                <i class="fa fa-list"></i><span>Liste</span></a>
+            </li>
 
         </ul>
         <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-            <a href="https://getcodiepie.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split"><i class="fas fa-rocket"></i> Documentation</a>
+            <a href="https://getcodiepie.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split"><i
+                    class="fas fa-rocket"></i> Documentation</a>
         </div>
     </aside>
 </div>
