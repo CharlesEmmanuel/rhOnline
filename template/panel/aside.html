@@ -1,7 +1,9 @@
+{% load static %}
 <div class="main-sidebar sidebar-style-3">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{% url 'dashboard' %}">RhOnline</a>
+            <img src="{% static '' %}asset/img/logo/pink_background_RhOnline_Logo.png" alt="logo" style="width:50px; margin-right:10px !important;">
+            <a class="" href="{% url 'dashboard' %}" style="text-decoration: none; font-size: 1.6em !important; margin-right:30px !important; margin-top:50px !important;">RhOnline</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{% url 'dashboard' %}">RH</a>
@@ -56,9 +58,9 @@
             </li>
 
         </ul>
-        <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-            <a href="https://getcodiepie.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split"><i
-                    class="fas fa-rocket"></i> Documentation</a>
+        <div class="mt-4 mb-4 p-3 hide-sidebar-mini d-flex justify-content-center">
+
+
         </div>
     </aside>
 </div>
