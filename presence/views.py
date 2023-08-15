@@ -23,6 +23,7 @@ def update_attendance_in_db_in(face_id):
             pointage.save()
             presence = Presence(employe=employee, datedebut=time)
             presence.save()
+
         else:
             # Message à retourné
             print("Vous n'est pas reconnu")
@@ -33,7 +34,7 @@ def update_attendance_in_db_in(face_id):
             print("Message : Bienvenue")
             # requette.present = True
             # requette.save(update_fields=['present'])
-            return requette
+    return requette
 
 def update_attendance_in_db_out(face_id):
     today = datetime.date.today()
@@ -60,6 +61,7 @@ def update_attendance_in_db_out(face_id):
             requette.datefin = time
             requette.save()
 
+    return requette
 
 def checkin_face(request):
     face_id = facerecognition.recognizeFace()
@@ -70,21 +72,25 @@ def checkin_face(request):
     timer = update_attendance_in_db_in(face_id)
 
     context = {
+        'tags': 'entree',
         'employe': employe_scanned,
-        'typetag' : "d'arrivée",
-        'timer' : timer
+        'typetag': "d'arrivée",
+        'timer': timer
     }
     return render(request, 'presence/user_scanned_new.html', context)
 
 def checkout_face(request):
     face_id = facerecognition.recognizeFace()
     print(face_id)
-    users = Employe.objects.get(faceid=face_id)
-    # update_attendance_in_db_out(face_id)
+    # users = Employe.objects.get(faceid=face_id)
+    timer = update_attendance_in_db_out(face_id)
 
-    employe_scanned = Employe.objects.filter(soft_deleting=False)
+    employe_scanned = Employe.objects.get(faceid=face_id)
     context = {
-        'employe': employe_scanned
+        'tags': 'sortie',
+        'employe': employe_scanned,
+        'typetag': "de départ",
+        'timer': timer
     }
     return render(request, 'presence/user_scanned_new.html', context)
 

@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.safestring import mark_safe
 import os
 
+
 # Create your models here.
 
 class Departement(models.Model):
@@ -13,8 +14,10 @@ class Departement(models.Model):
     soft_deleting = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.name
+
 
 class Poste(models.Model):
     name = models.CharField(max_length=255)
@@ -22,8 +25,10 @@ class Poste(models.Model):
     soft_deleting = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.name
+
 
 class LieuEmploi(models.Model):
     name = models.CharField(max_length=255)
@@ -31,25 +36,27 @@ class LieuEmploi(models.Model):
     soft_deleting = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.name
 
+
 class MyAccountManager(BaseUserManager):
-    def create_user(self,first_name,last_name,email,user_type,password=None):
+    def create_user(self, first_name, last_name, email, user_type, password=None):
         if not email:
             raise ValueError("l'utilisateur doit avoir une adresse email")
 
         user = self.model(
-            email = self.normalize_email(email),
-            first_name = first_name,
-            last_name = last_name,
-            user_type = user_type,
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            user_type=user_type,
         )
         user.set_password(password)
-        user.save(using = self._db)
+        user.save(using=self._db)
         return user
 
-    def create_superuser(self,first_name,last_name,email,password=None):
+    def create_superuser(self, first_name, last_name, email, password=None):
         user = self.create_user(
             email=self.normalize_email(email),
             first_name=first_name,
@@ -57,6 +64,7 @@ class MyAccountManager(BaseUserManager):
             user_type='AD',
             password=password,
         )
+
         user.is_admin = True
         user.is_active = True
         user.is_superadmin = True
@@ -64,17 +72,33 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def autoCreateEmploye(self):
+        pass
+
+    def autoCreateDepartment(self, nom, description):
+
+        pass
+
+    def autoCreatePoste(self, nom, mission):
+        pass
+
+    def autoCreateLiEmploi(self, nom, adresse):
+        pass
+
+
 USER_CHOICES = [
     ('E', 'Employe'),
     ('R', 'Ressources Humaines'),
     ('AD', 'Administrateur')
 ]
+
+
 class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    #username = models.CharField(max_length=50,unique=True)
-    email = models.EmailField(max_length=100,unique=True)
-    user_type = models.CharField(choices=USER_CHOICES, max_length=5,default='E')
+    # username = models.CharField(max_length=50,unique=True)
+    email = models.EmailField(max_length=100, unique=True)
+    user_type = models.CharField(choices=USER_CHOICES, max_length=5, default='E')
 
     # required
     soft_deleting = models.BooleanField(default=False)
@@ -86,17 +110,17 @@ class Account(AbstractBaseUser):
     is_superadmin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name','last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = MyAccountManager()
 
     def _str_(self):
         return "{} {}".format(self.first_name, self.last_name)
 
-    def has_perm(self,perm,obj=None):
+    def has_perm(self, perm, obj=None):
         return self.is_admin
 
-    def has_module_perms(self,add_label):
+    def has_module_perms(self, add_label):
         return True
 
     @property
@@ -105,6 +129,7 @@ class Account(AbstractBaseUser):
             return 'EMPLOYÉ'
         else:
             return False
+
     @property
     def is_Rh(self):
         if self.user_type == 'R':
@@ -113,16 +138,12 @@ class Account(AbstractBaseUser):
             return False
 
     def statutemp(self):
-        if(self.user_type=='E'):
+        if (self.user_type == 'E'):
             return 'EMPLOYÉ'
         elif (self.user_type == 'R'):
             return 'RESSOURCES HUMAINES'
         elif (self.user_type == 'AD'):
             return 'ADMINISTRATEUR'
-
-
-
-
 
 
 GENDER_CHOICES = [
@@ -135,7 +156,7 @@ STATUT_MAT = [
 ]
 
 
-def renameImage(instance,filename):
+def renameImage(instance, filename):
     upload_to = 'employe'
     ext = filename.split('.')[-1]
     # get filename
@@ -150,8 +171,10 @@ def renameImage(instance,filename):
 
 class Employe(models.Model):
     account = models.OneToOneField(Account, related_name='employe', on_delete=models.SET_NULL, null=True, blank=True)
-    departement = models.ForeignKey(Departement, related_name='employe', on_delete=models.SET_NULL, null=True, blank=True)
-    lieuemploie = models.ForeignKey(LieuEmploi, related_name='employe', on_delete=models.SET_NULL, null=True, blank=True)
+    departement = models.ForeignKey(Departement, related_name='employe', on_delete=models.SET_NULL, null=True,
+                                    blank=True)
+    lieuemploie = models.ForeignKey(LieuEmploi, related_name='employe', on_delete=models.SET_NULL, null=True,
+                                    blank=True)
     poste = models.ForeignKey(Poste, related_name='employe', on_delete=models.SET_NULL, null=True, blank=True)
 
     faceid = models.IntegerField()
@@ -162,7 +185,7 @@ class Employe(models.Model):
     datenaiss = models.DateField()
     phone1 = models.CharField(max_length=100)
     phone2 = models.CharField(max_length=100)
-    emailemp = models.CharField(max_length=255) #Email employe
+    emailemp = models.CharField(max_length=255)  # Email employe
     adress = models.CharField(max_length=255)
     numbank = models.CharField(max_length=255)
     statutmat = models.CharField(choices=STATUT_MAT, max_length=50)
@@ -173,15 +196,17 @@ class Employe(models.Model):
     soft_deleting = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        return self.name +" "+self.prenom
+        return self.name + " " + self.prenom
 
     def listcontrats(self):
         contrats = self.contrat.filter(soft_deleting=False).count()
 
         return contrats
+
     def getGenre(self):
-        if(self.genre == 'H'):
+        if (self.genre == 'H'):
             return 'Homme'
         else:
             return 'Femme'
@@ -194,4 +219,3 @@ class Employe(models.Model):
 
     def imageEmp(self):
         return mark_safe('<img src="{}"  height="20">').format(self.photoemp.url)
-
