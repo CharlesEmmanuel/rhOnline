@@ -10,8 +10,11 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-title">Logged in 5 min ago</div>
-                <a href="features-profile.html" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile</a>
-                <a href="features-settings.html" class="dropdown-item has-icon"><i class="fas fa-cog"></i> Settings</a>
+                <a href="{% url 'employe_fiche' user.employe.id %}" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile</a>
+                {%if user.is_employe == False %}
+                    <a href="{% url 'liste_departement'%}" class="dropdown-item has-icon"><i class="fas fa-cog"></i> Settings</a>
+                    {%else%}
+                    {%endif%}
                 <div class="dropdown-divider"></div>
                 <a href="{% url 'logout' %}" class="dropdown-item has-icon text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>

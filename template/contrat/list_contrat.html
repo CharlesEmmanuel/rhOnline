@@ -21,11 +21,7 @@
     <section class="section">
         <div class="section-header">
             <h1>CONTRATS de {{listing.name}} {{listing.prenom}} </h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                <div class="breadcrumb-item"><a href="#">Modules</a></div>
-                <div class="breadcrumb-item">DataTables</div>
-            </div>
+
         </div>
 
         {% if messages %}
@@ -36,14 +32,16 @@
 
         <div class="section-body">
             <div class="row">
+                        {% include 'panel/background_image_card.html' %}
 
                 <div class="col-12 col-12">
 
                     {% for showcontrat in showcontrats %}
                     <div class="card">
 
-                        <div class="card-body">
+                        <div class="card-body" style="z-index:1;">
                             <div class="card">
+
                                 <div class="card-header">
                                     <h4>
                                         {{showcontrat.getContratType}}

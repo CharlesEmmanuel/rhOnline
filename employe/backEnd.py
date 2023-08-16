@@ -49,7 +49,7 @@ class FaceRecognition:
                 count += 1
 
                 # Save the captured image into the datasets folder
-                if count < 6:
+                if count < 10:
 
                     cv2.imwrite(BASE_DIR + '/employe/dataset/User.' + str(face_id) + '.' + str(count) + ".jpg",
                                 gray[y:y + h, x:x + w])
