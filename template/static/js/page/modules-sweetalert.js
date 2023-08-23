@@ -4,9 +4,9 @@ $("#swal-1").click(function() {
 	swal('Hello');
 });
 
-$("#swal-2").click(function() {
-	swal('Good Job', 'You clicked the button!', 'success');
-});
+//$("#swal-2").click(function() {
+//	swal('Good Job', 'You clicked the button!', 'success');
+//});
 
 $("#swal-3").click(function() {
 	swal('Good Job', 'You clicked the button!', 'warning');

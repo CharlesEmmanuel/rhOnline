@@ -1,14 +1,14 @@
 from django.urls import path
 from employe.views import liste_departement, delete_departement, liste_poste, delete_poste, edit_poste, liste_liemploi, \
     edit_liemploi, delete_liemploi, liste_emp, EmployeCreateView, delete_employe, edit_employe, scanFace, \
-    fiche_employe, stream
+    fiche_employe, stream, edit_departement
 
 urlpatterns = [
     # Departements links
     path('departement/liste', liste_departement, name='liste_departement'),
     path('departement/', liste_departement, name='liste_departement'),
     path('departement/delete/<int:pk>', delete_departement, name='delete_departement'),
-    path('departement/edit/<int:pk>', edit_poste, name='edit_departement'),
+    path('departement/edit/<int:pk>', edit_departement, name='edit_departement'),
 
     # Poste links
     path('poste/liste', liste_poste, name='liste_poste'),
@@ -21,8 +21,6 @@ urlpatterns = [
     path('liemploi/', liste_liemploi, name='liste_liemploi'),
     path('liemploi/delete/<int:pk>', delete_liemploi, name='delete_liemploi'),
     path('liemploi/edit/<int:pk>', edit_liemploi, name='edit_liemploi'),
-
-
 
     # Employes
 

@@ -11,6 +11,7 @@
 
 <link rel="stylesheet" href="{% static '' %}assets/modules/izitoast/css/iziToast.min.css">
 
+
 {% endblock %}
 {% block body %}
 
@@ -22,19 +23,14 @@
 
         </div>
 
-        {% if messages %}
-        {% for message in messages%}
-        <div class="alert alert-{{message.tags}}">{{message}}.</div>
-        {%endfor%}
-        {% endif %}
-
         <div class="section-body">
             <div class="row">
 
                 <div class="col-12">
                     <div class="card">
-                        <form class="needs-validation" novalidate="" method="POST" name="depar">
+                        <form class="needs-validation" novalidate="" method="POST" name="depar" id="myForm">
                             {% csrf_token %}
+                            <input type="hidden" name="form_submission_token" value="{{ form_submission_token }}">
                             <div class="card-header">
                                 <h4>Enregistrement Departements</h4>
                             </div>
@@ -47,17 +43,11 @@
                                 <button class="btn btn-primary">Enregistrer</button>
                             </div>
                         </form>
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <div class="mb-2">Success Message</div>
-                                    <button class="btn btn-primary" id="toastr-2">Launch</button>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -98,7 +88,7 @@
 
                                         <td class="text-center">
                                             <a href="{% url 'edit_departement' i.id %}" class="btn btn-secondary">Modifier</a>
-                                            <a href="{% url 'delete_departement' i.id %}" class="btn btn-danger">Supprimer</a>
+                                            <a href="{% url 'delete_departement' i.id %}" class="btn btn-danger swal-6" data-id="{{ i.id }}">Supprimer</a>
                                         </td>
 
                                     </tr>
@@ -113,6 +103,7 @@
         </div>
     </section>
 </div>
+
 {% endblock %}
 
 {%block foot%}
@@ -124,10 +115,15 @@
 <!-- Page Specific JS File -->
 <script src="{% static '' %}js/page/modules-datatables.js"></script>
 
-<!-- JS Libraies -->
-<script src="{% static '' %}assets/modules/izitoast/js/iziToast.min.js"></script>
+<script src="{% static '' %}assets/modules/sweetalert/sweetalert.min.js"></script>
 
 <!-- Page Specific JS File -->
-<script src="{% static '' %}js/page/modules-toastr.js"></script>
+<!--<script src="{% static '' %}js/page/modules-sweetalert.js"></script>-->
+
+
+<script>
+    {% include 'panel/sweetalert_conditions/sweetalert.html' %}
+</script>
+
 
 {%endblock%}

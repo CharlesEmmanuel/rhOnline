@@ -16,7 +16,7 @@ def employe_permission(view_func):
 
 def access_permission(request):
     try:
-        if request.user.is_authenticated and request.user.is_admin:
+        if request.user.is_authenticated and request.user.user_type == 'AD':
             print('admin')
             return request.user.is_authenticated
         else:

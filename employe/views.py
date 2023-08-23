@@ -13,6 +13,8 @@ from django.utils.decorators import method_decorator
 
 from employe.permissions import employe_permission, show_permission
 
+import uuid
+
 facerecognition = FaceRecognition()
 
 
@@ -40,16 +42,29 @@ def stream(request):
 def liste_departement(request):
     # print(request.name) A FAIRE UNE VERIFICATION DES INFORMATIONS ENTREES PAS L'UTILISATEUR ( CHAMPS VIDES )
     # breakpoint()
+    form_submission_token = uuid.uuid4()
     if request.method == 'POST':
         forms = DepartementForm(request.POST)
         if forms.is_valid():
             if not forms.data['name'] and not forms.data['description']:
-                messages.error(request, "Departement non enregistré", "danger")
+                messages.error(request, "Departement non enregistré")
             else:
+                n = forms.data['name']
+                d = forms.data['description']
+
+                req2 = Departement.objects.filter(name=n,description=d)
+                print(str(req2))
+
+                if req2:
+                    messages.warning(request, "Departement Existant dans la base")
+                    request.method = 'GET'
+                    return liste_departement(request)
+
                 forms.save()
-                messages.success(request, "Departement enregistré", "success")
+                return confirm_depView(request)
+
         else:
-            messages.error(request, "Departement non enregistré", "danger")
+            messages.error(request, "Departement non enregistré")
 
     form_dep = DepartementForm
     departement_list = Departement.objects.filter(soft_deleting=False)
@@ -60,8 +75,16 @@ def liste_departement(request):
 
     return render(request, 'departement/liste_departement.html', context)
 
-# def toastr(request):
-#     return render(request, 'employe/toastr.html')
+def confirm_depView(request):
+    messages.success(request, "Departement enregistré")
+    form_dep = DepartementForm
+    departement_list = Departement.objects.filter(soft_deleting=False)
+    context = {
+        'forms': form_dep,
+        'listing': departement_list,
+    }
+
+    return render(request, 'departement/liste_departement.html', context)
 
 
 @login_required(login_url="login")
@@ -70,11 +93,12 @@ def delete_departement(request, pk):
         departement = Departement.objects.get(id=pk)
 
     except Departement.DoesNotExist:
-        messages.error(request, "Departement n'existe pas", "danger")
-
+        messages.error(request, "Departement n'existe pas")
+        print('Departement non trouvé')
+        return redirect('liste_departement')
     departement.soft_deleting = True
     departement.save()
-    messages.error(request, "Departement Supprimé", "danger")
+    messages.success(request, "Departement Supprimé !")
     return redirect('liste_departement')
 
 
@@ -85,10 +109,11 @@ def edit_departement(request, pk):
         forms = DepartementForm(request.POST, instance=departement)
         if forms.is_valid():
             forms.save()
-            messages.success(request, "Departement enregistré", "success")
+            messages.success(request, "Departement : Modification enregistré !")
+
             return redirect('liste_departement')
         else:
-            messages.error(request, "Departement non enregistré", "danger")
+            messages.error(request, "Departement : Modification échouée !")
             return redirect('liste_departement')
     else:
         form_dep = DepartementForm(instance=departement)
@@ -97,7 +122,6 @@ def edit_departement(request, pk):
         context = {
             'forms': form_dep,
             'listing': departement_list,
-
         }
         return render(request, 'departement/liste_departement.html', context)
 
@@ -192,7 +216,7 @@ def delete_liemploi(request, pk):
         liemploi = LieuEmploi.objects.get(id=pk)
 
     except liemploi.DoesNotExist:
-        messages.success(request, "Poste n'existe pas")
+        messages.success(request, "Lieu D'emploie n'existe pas")
 
     liemploi.soft_deleting = True
     liemploi.save()

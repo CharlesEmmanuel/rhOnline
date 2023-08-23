@@ -24,13 +24,7 @@ $("#toastr-3").click(function() {
   });
 });
 
-$("#toastr-4").click(function() {
-  iziToast.error({
-    title: 'Hello, world!',
-    message: 'This awesome plugin is made by iziToast',
-    position: 'topRight'
-  });
-});
+
 
 $("#toastr-5").click(function() {
   iziToast.show({
