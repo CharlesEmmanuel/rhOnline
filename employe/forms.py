@@ -32,12 +32,12 @@ class PosteForm(ModelForm):
         model = Poste
         fields = ['name', 'mission']
         labels = {
-            'name' : _('Nom'),
-            'mission' : _('Mission')
+            'name': _('Nom'),
+            'mission': _('Mission')
         }
         widgets = {
-            'name': Textarea(attrs={'class': 'form-control', 'placeholder' : 'Veuillez saisir le nom du poste', 'required' : 'required' }),
-            'mission': Textarea(attrs={'class': 'form-control','required' : 'required'}),
+            'name': Textarea(attrs={'class': 'form-control', 'placeholder': 'Veuillez saisir le nom du poste', 'required' : 'required' }),
+            'mission': Textarea(attrs={'class': 'form-control','required': 'required','error_messages':'Mission non renseigné'}),
         }
 
 class LiemploiForm(ModelForm):

@@ -158,7 +158,7 @@
                             <div class="col-sm-6 text-secondary">
                                 {%if tags == 'entree'%}
                                     {% language 'fr' %}
-                                        {{ timer.datedebut|date:'H:i:s' }}
+                                        {{ timer.update_at|date:'H:i:s' }}
                                     {% endlanguage %}
                                 {%else%}
                                     {% language 'fr' %}

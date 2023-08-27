@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 import datetime
 from employe.models import Employe
@@ -14,11 +15,12 @@ def update_attendance_in_db_in(face_id):
     employee=Employe.objects.get(faceid=face_id)
     print(employee.name)
     try:
-        requette = Pointage.objects.get(employee=employee, date=today)
+        requette = Presence.objects.get(employe=employee, date=today)
     except:
         requette = None
     if requette is None:
         if employee.faceid == face_id:
+
             pointage = Pointage(employee=employee, date=today,date_time=time, present=True,is_out=False)
             pointage.save()
             presence = Presence(employe=employee, datedebut=time)
@@ -30,10 +32,11 @@ def update_attendance_in_db_in(face_id):
 
     else:
         if employee.faceid == face_id:
+
             # Message : Bienvenue
             print("Message : Bienvenue")
-            # requette.present = True
-            # requette.save(update_fields=['present'])
+            requette.state = True
+            requette.save()
     return requette
 
 def update_attendance_in_db_out(face_id):
@@ -70,7 +73,7 @@ def checkin_face(request):
     employe_scanned = Employe.objects.get(faceid=face_id)
 
     timer = update_attendance_in_db_in(face_id)
-
+    print(timer.update_at)
     context = {
         'tags': 'entree',
         'employe': employe_scanned,
@@ -84,7 +87,7 @@ def checkout_face(request):
     print(face_id)
     # users = Employe.objects.get(faceid=face_id)
     timer = update_attendance_in_db_out(face_id)
-
+    print(timer.update_at)
     employe_scanned = Employe.objects.get(faceid=face_id)
     context = {
         'tags': 'sortie',
@@ -94,6 +97,7 @@ def checkout_face(request):
     }
     return render(request, 'presence/user_scanned_new.html', context)
 
+@login_required(login_url="login")
 def liste_presence(request):
     if access_permission(request):
         presence_liste = Presence.objects.all()

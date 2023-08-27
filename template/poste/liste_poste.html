@@ -5,7 +5,8 @@
 
 <!-- CSS Libraries -->
 <link rel="stylesheet" href="{% static '' %}assets/modules/datatables/datatables.min.css">
-<link rel="stylesheet" href="{% static '' %}assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet"
+      href="{% static '' %}assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{% static '' %}assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css">
 
 <link rel="stylesheet" href="{% static '' %}assets/modules/izitoast/css/iziToast.min.css">
@@ -21,12 +22,6 @@
 
         </div>
 
-{% if messages %}
-{% for message in messages%}
-    <div class="alert alert-{{message.tags}}">{{message}}.</div>
-{%endfor%}
-{% endif %}
-
         <div class="section-body">
             <div class="row">
 
@@ -39,7 +34,9 @@
                             </div>
                             <div class="card-body">
                                 {{ forms.as_p }}
+
                             </div>
+
                             <div class="card-footer text-center">
                                 <button class="btn btn-primary">Submit</button>
                             </div>
@@ -73,23 +70,24 @@
                                     </thead>
                                     <tbody>
                                     {% for i in listing %}
-                                        <tr>
-                                            <td class="text-center">
-                                                <div class="custom-checkbox custom-control">
-                                                    <input type="checkbox" data-checkboxes="mygroup"
-                                                           class="custom-control-input" id="checkbox-{{i.id}}">
-                                                    <label for="checkbox-{{i.id}}" class="custom-control-label">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">{{ i.name }}</td>
-                                            <td class="text-center">{{ i.mission }}</td>
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="custom-checkbox custom-control">
+                                                <input type="checkbox" data-checkboxes="mygroup"
+                                                       class="custom-control-input" id="checkbox-{{i.id}}">
+                                                <label for="checkbox-{{i.id}}"
+                                                       class="custom-control-label">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ i.name }}</td>
+                                        <td class="text-center">{{ i.mission }}</td>
 
-                                            <td class="text-center">
-                                                <a href="{% url 'edit_poste' i.id %}" class="btn btn-secondary">Modifier</a>
-                                                <a href="{% url 'delete_poste' i.id %}" class="btn btn-danger">Supprimer</a>
-                                            </td>
+                                        <td class="text-center">
+                                            <a href="{% url 'edit_poste' i.id %}" class="btn btn-secondary">Modifier</a>
+                                            <a href="{% url 'delete_poste' i.id %}" class="btn btn-danger swal-6">Supprimer</a>
+                                        </td>
 
-                                        </tr>
+                                    </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
@@ -113,9 +111,12 @@
 <script src="{% static '' %}js/page/modules-datatables.js"></script>
 
 <!-- JS Libraies -->
-<script src="{% static '' %}assets/modules/izitoast/js/iziToast.min.js"></script>
 
-<!-- Page Specific JS File -->
-<script src="{% static '' %}js/page/modules-toastr.js"></script>
+
+<script src="{% static '' %}assets/modules/sweetalert/sweetalert.min.js"></script>
+<script>
+    {% include 'panel/sweetalert_conditions/sweetalert.html' %}
+</script>
+
 
 {%endblock%}

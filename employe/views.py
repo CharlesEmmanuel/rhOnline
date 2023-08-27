@@ -40,9 +40,13 @@ def stream(request):
 # @permission_required(Account.user_type,login_url="login")
 @employe_permission
 def liste_departement(request):
-    # print(request.name) A FAIRE UNE VERIFICATION DES INFORMATIONS ENTREES PAS L'UTILISATEUR ( CHAMPS VIDES )
-    # breakpoint()
-    form_submission_token = uuid.uuid4()
+    form_dep = DepartementForm
+    departement_list = Departement.objects.filter(soft_deleting=False)
+    context = {
+        'forms': form_dep,
+        'listing': departement_list,
+    }
+
     if request.method == 'POST':
         forms = DepartementForm(request.POST)
         if forms.is_valid():
@@ -61,28 +65,11 @@ def liste_departement(request):
                     return liste_departement(request)
 
                 forms.save()
-                return confirm_depView(request)
+                messages.success(request, "Departement enregistré")
+                return render(request, 'departement/liste_departement.html', context)
 
         else:
             messages.error(request, "Departement non enregistré")
-
-    form_dep = DepartementForm
-    departement_list = Departement.objects.filter(soft_deleting=False)
-    context = {
-        'forms': form_dep,
-        'listing': departement_list,
-    }
-
-    return render(request, 'departement/liste_departement.html', context)
-
-def confirm_depView(request):
-    messages.success(request, "Departement enregistré")
-    form_dep = DepartementForm
-    departement_list = Departement.objects.filter(soft_deleting=False)
-    context = {
-        'forms': form_dep,
-        'listing': departement_list,
-    }
 
     return render(request, 'departement/liste_departement.html', context)
 
@@ -128,23 +115,34 @@ def edit_departement(request, pk):
 
 @login_required(login_url="login")
 def liste_poste(request):
-    if request.method == 'POST':
-        forms = PosteForm(request.POST)
-        if forms.is_valid():
-            if not forms.data['name'] and not forms.data['description']:
-                messages.error(request, "Poste non enregistré", "danger")
-            else:
-                forms.save()
-                messages.success(request, "Poste enregistré", "success")
-        else:
-            messages.success(request, "Poste non enregistré")
-
     form_post = PosteForm
     poste_list = Poste.objects.filter(soft_deleting=False)
     context = {
         'forms': form_post,
         'listing': poste_list
     }
+    if request.method == 'POST':
+        forms = PosteForm(request.POST)
+        if forms.is_valid():
+            if not forms.data['name'] and not forms.data['mission']:
+                messages.error(request, "Poste non enregistré")
+            else:
+                n = forms.data['name']
+                m = forms.data['mission']
+
+                req2 = Poste.objects.filter(name=n, mission=m)
+                print(str(req2))
+
+                if req2:
+                    messages.warning(request, "Poste Existant dans la base")
+                    request.method = 'GET'
+                    return liste_poste(request)
+
+
+                forms.save()
+                messages.success(request, "Poste enregistré")
+        else:
+            messages.error(request, "Poste non enregistré")
 
     return render(request, 'poste/liste_poste.html', context)
 
@@ -170,10 +168,10 @@ def edit_poste(request, pk):
         forms = PosteForm(request.POST, instance=poste)
         if forms.is_valid():
             forms.save()
-            messages.success(request, "Poste enregistré", "success")
+            messages.success(request, "Poste : Modification enregistré !")
             return redirect('liste_poste')
         else:
-            messages.error(request, "Poste non enregistré", "danger")
+            messages.error(request, "Poste : Modification échoué !")
             return redirect('liste_poste')
     else:
         form_poste = PosteForm(instance=poste)
@@ -192,11 +190,22 @@ def liste_liemploi(request):
     if request.method == 'POST':
         forms = LiemploiForm(request.POST)
         if forms.is_valid():
-            if not forms.data['name'] and not forms.data['description']:
-                messages.error(request, "Lieu non enregistré", "danger")
+            if not forms.data['name'] and not forms.data['adresse']:
+                messages.error(request, "Lieu non enregistré")
             else:
+                n = forms.data['name']
+                a = forms.data['adresse']
+
+                req2 = LieuEmploi.objects.filter(name=n, adresse=a)
+                print(str(req2))
+
+                if req2:
+                    messages.warning(request, "Lieu Emploie Existant dans la base")
+                    request.method = 'GET'
+                    return liste_liemploi(request)
+
                 forms.save()
-                messages.success(request, "Lieu enregistré", "success")
+                messages.success(request, "Lieu enregistré")
         else:
             messages.success(request, "lieu non enregistré")
 
@@ -231,10 +240,10 @@ def edit_liemploi(request, pk):
         forms = LiemploiForm(request.POST, instance=liemploi)
         if forms.is_valid():
             forms.save()
-            messages.success(request, "Lieu enregistré", "success")
+            messages.success(request, "Lieu Emploie : Modification enregistré !")
             return redirect('liste_liemploi')
         else:
-            messages.error(request, "Lieu non enregistré", "danger")
+            messages.error(request, "Lieu Emploie: Modification échoué !")
             return redirect('liste_liemploi')
     else:
         form_liemploi = LiemploiForm(instance=liemploi)
@@ -253,9 +262,9 @@ class EmployeCreateView(CreateView):
     template_name = 'employe/ajouter_employe.html'
 
     context = {
-        'departements': Departement.objects.all(),
-        'lieuemp': LieuEmploi.objects.all(),
-        'postes': Poste.objects.all(),
+        'departements': Departement.objects.filter(soft_deleting=False),
+        'lieuemp': LieuEmploi.objects.filter(soft_deleting=False),
+        'postes': Poste.objects.filter(soft_deleting=False),
     }
 
     def get(self, request, *args, **kwargs):
@@ -265,7 +274,7 @@ class EmployeCreateView(CreateView):
         self.object = None
         if request.POST:
             self.form_valid_emp(request)
-            messages.success(request, "Employé enregistré avec succès", "success")
+            messages.success(request, "Employé enregistré avec succès")
             return redirect('create_employe')
         else:
             pass
@@ -273,7 +282,7 @@ class EmployeCreateView(CreateView):
     def form_valid_emp(self, request):
         if not request.POST['frist_name'] and not request.POST['last_name'] and not request.POST['mail'] and not \
                 request.POST['dapartmpnt'] and not request.POST['unposted'] and not request.POST['telephone']:
-            messages.error(request, "Employé non enregistré", "danger")
+            messages.error(request, "Employé non enregistré")
         else:
 
             nom = request.POST['frist_name']
@@ -349,7 +358,7 @@ def delete_employe(request, pk):
         account = Account.objects.get(id=employe.account_id)
 
     except employe.DoesNotExist:
-        messages.success(request, "Employé n'existe pas")
+        messages.error(request, "Employé n'existe pas")
 
     account.soft_deleting = True
     employe.soft_deleting = True
@@ -366,7 +375,7 @@ def edit_employe(request, pk):
         account = Account.objects.get(id=employe.account_id)
 
     except employe.DoesNotExist:
-        messages.success(request, "Employé n'existe pas")
+        messages.error(request, "Employé n'existe pas")
 
     if request.method == 'POST':
 
@@ -420,7 +429,7 @@ def edit_employe(request, pk):
             employe.contacturgence = numurgence
             employe.save()
 
-        messages.success(request, "Modification Effectuée", "success")
+        messages.success(request, "Modification Effectuée")
         return redirect('liste_employe')
     else:
         context = {

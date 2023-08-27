@@ -14,7 +14,6 @@
 <style>
 
 
-
 </style>
 
 {% endblock %}
@@ -25,28 +24,13 @@
     <section class="section">
         <div class="section-header">
             <h1>EMPLOYE</h1>
-
         </div>
-
-        {% if messages %}
-        {% for message in messages%}
-        <div class="alert alert-{{message.tags}}">{{message}}.</div>
-        {%endfor%}
-        {% endif %}
         {% include 'panel/background_image_card.html' %}
         <div class="section-body">
             <div class="row d-flex justify-content-center">
                 {% if user.is_admin %}
                 <div class="col-lg-5 d-flex justify-content-center">
-                    <div class="card">
-                        <div class="card-footer">
-                            <a href="{% url 'create_employe' %}" class="btn btn-success" title="Ajouter Employé"
-                               role="button"
-                               aria-pressed="true">
-                                <i class="fas fa-user-plus"></i>
-                            </a>
-                        </div>
-                    </div>
+
                 </div>
                 {% endif %}
             </div>
@@ -54,7 +38,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Liste D'employés</h4>
+                            <h4>Employés &nbsp; &nbsp;
+                                <a href="{% url 'create_employe' %}" class="btn btn-success" title="Ajouter Employé"
+                                            role="button"
+                                            aria-pressed="true">
+                                <i class="fas fa-user-plus"></i>
+                            </a></h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -83,7 +72,8 @@
 
                                         <td class="text-center">
                                             {% if user.is_admin %}
-                                            <a class="emp_link_redirect text-primary" href="{% url 'employe_fiche' i.id %}"
+                                            <a class="emp_link_redirect text-primary"
+                                               href="{% url 'employe_fiche' i.id %}"
                                                data-toggle="tooltip" data-original-title="Voir Fiche">
                                                 {{ i.name }} {{ i.prenom }}
                                             </a>
@@ -106,7 +96,7 @@
                                             <a href="{% url 'edit_employe' i.id %}"
                                                class="btn btn-secondary">Modifier</a>
                                             <a href="{% url 'delete_employe' i.id %}"
-                                               class="btn btn-danger">Supprimer</a>
+                                               class="btn btn-danger swal-6">Archiver</a>
                                         </td>
                                         {%endif%}
 
@@ -134,9 +124,9 @@
 <script src="{% static '' %}js/page/modules-datatables.js"></script>
 
 <!-- JS Libraies -->
-<script src="{% static '' %}assets/modules/izitoast/js/iziToast.min.js"></script>
-
-<!-- Page Specific JS File -->
-<script src="{% static '' %}js/page/modules-toastr.js"></script>
+<script src="{% static '' %}assets/modules/sweetalert/sweetalert.min.js"></script>
+<script>
+    {% include 'panel/sweetalert_conditions/sweetalert.html' %}
+</script>
 
 {%endblock%}

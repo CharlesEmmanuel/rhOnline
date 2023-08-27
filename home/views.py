@@ -13,12 +13,13 @@ def dashboard(request):
     return render(request, 'dashboard/menu.html')
 
 def login_user(request):
+    logout(request)
     # breakpoint()
     if request.method == 'POST':
 
         if not request.POST['email_utilisateur'] and not request.POST['password_utilisateur']:
 
-            messages.error(request, "Connexion Echouée", "danger")
+            messages.error(request, "Connexion Echouée")
         else:
 
             email = request.POST['email_utilisateur']
@@ -34,7 +35,7 @@ def login_user(request):
                 # return render(request, 'dashboard/menu.html')
             else:
                 print("Non Connecté")
-                messages.error(request, "Connexion Echouée", "danger")
+                messages.error(request, "Email ou mot de passe incorrect",)
                 return redirect("login")
 
     return render(request, 'home/login.html')

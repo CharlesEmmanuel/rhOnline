@@ -8,6 +8,7 @@ from conges.models import Conges, Typeconges
 from employe.models import Employe
 from django.contrib.auth.decorators import login_required
 from employe.permissions import employe_permission, show_permission
+from employe.doubleVerification import *
 
 
 
@@ -19,10 +20,22 @@ def ajout_tconges(request):
         forms = TypecongesForm(request.POST)
         if forms.is_valid():
             if not forms.data['name'] and not forms.data['description']:
-                messages.error(request, "Type de congé Non enregistré", "danger")
+                messages.error(request, "Type de congé Non enregistré")
             else:
+
+                n = forms.data['name']
+                d = forms.data['description']
+
+                req2 = Typeconges.objects.filter(name=n, description=d)
+                print(str(req2))
+
+                if req2:
+                    messages.warning(request, "Type de congé Existant dans la base")
+                    request.method = 'GET'
+                    return ajout_tconges(request)
+
                 forms.save()
-                messages.success(request, "Type de congé enregistré", "success")
+                messages.success(request, "Type de congé enregistré")
         else:
             messages.error(request, "ype de congé Non enregistré")
 
@@ -58,10 +71,10 @@ def edit_tconges(request, pk):
 
         if forms.is_valid():
             forms.save()
-            messages.success(request, "Type de congé Modifié", "success")
+            messages.success(request, "Type de congé : Modification Effectuée")
             return redirect('add_tconges')
         else:
-            messages.error(request, "Type de congé non enregistré", "danger")
+            messages.error(request, "Type de congé non enregistré")
             return redirect('add_tconges')
     else:
         form_typeconge = TypecongesForm(instance=typeconges)
@@ -96,13 +109,13 @@ def add_conges(request, pk):
             typeconges_list = Typeconges.objects.all()
 
         except employe.DoesNotExist:
-            messages.success(request, "Employé n'existe pas")
+            messages.error(request, "Employé n'existe pas")
 
         if request.method == 'POST':
 
             if not request.POST['congesype'] and not request.POST['debutconges']:
 
-                messages.error(request, "Ajout de conges Échouée", "danger")
+                messages.error(request, "Ajout de conges Échouée")
             else:
                 typecong = request.POST['congesype']
                 datedebut = request.POST['debutconges']
@@ -128,7 +141,7 @@ def add_conges(request, pk):
                 # Code d'ajout du conges
                 idemp = employe.pk
 
-                messages.success(request, "conges Enrégistré", "success")
+                messages.success(request, "conges Enrégistré")
                 return redirect(reverse('conges_show',args=[idemp]))
         else:
             context = {
@@ -175,7 +188,7 @@ def submit_conges(request, pk):
     # Code d'ajout du conges
     idemp = employe.pk
 
-    messages.success(request, "Demande Envoyée", "success")
+    messages.success(request, "Demande Envoyée")
     return redirect(reverse('conges_show',args=[idemp]))
 
 
@@ -193,7 +206,7 @@ def edit_conges(request, pk):
 
         if not request.POST['congesype'] and not request.POST['debutconges']:
 
-            messages.error(request, "Mise à jour de conges Échouée", "danger")
+            messages.error(request, "Mise à jour de conges Échouée")
         else:
 
             typecong = request.POST['congesype']
@@ -213,7 +226,7 @@ def edit_conges(request, pk):
 
             idemp = employe.pk
 
-            messages.success(request, "Modification Effectuée", "success")
+            messages.success(request, "Modification Effectuée")
             return redirect(reverse('conges_show', args=[idemp]))
 
     else:
@@ -249,7 +262,7 @@ def undo_conges(request, pk):
 
     conges.etatconges = 'REJ'
     conges.save()
-    messages.error(request, "Demande Rejeté", "danger")
+    messages.error(request, "Demande Rejeté")
 
     employe = Employe.objects.get(id=conges.employe_id)
     idemp = employe.pk
@@ -266,7 +279,7 @@ def del_conges(request, pk):
 
         conges.soft_deleting = True
         conges.save()
-        messages.error(request, "conges Supprimé", "danger")
+        messages.error(request, "conges Supprimé")
 
         employe = Employe.objects.get(id=conges.employe_id)
         idemp = employe.pk

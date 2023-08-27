@@ -32,7 +32,7 @@ def add_sinistre(request, pk):
 
             if not request.POST['explain'] and not request.POST['datedeclaration']:
 
-                messages.error(request, "Ajout de sinistre Échouée", "danger")
+                messages.error(request, "Ajout de sinistre Échouée")
             else:
 
                 dateevent = request.POST['datedeclaration']
@@ -51,7 +51,7 @@ def add_sinistre(request, pk):
 
                 # Code d'ajout du sinistre
                 idemp = employe.pk
-                messages.success(request, "sinistre Enrégistré", "success")
+                messages.success(request, "sinistre Enrégistré")
 
                 return redirect(reverse('sinistre_show', args=[idemp]))
 
@@ -93,7 +93,7 @@ def edit_sinistre(request, pk):
 
         if not request.POST['datedeclaration'] and not request.POST['explain']:
 
-            messages.error(request, "Mise à jour de sinistre Échouée", "danger")
+            messages.error(request, "Mise à jour de sinistre Échouée")
         else:
 
 
@@ -110,7 +110,7 @@ def edit_sinistre(request, pk):
             sinistre.save()
 
             idemp = employe.pk
-            messages.success(request, "sinistre modifié", "success")
+            messages.success(request, "sinistre modifié")
             return redirect(reverse('sinistre_show', args=[idemp]))
 
     else:
@@ -132,5 +132,5 @@ def del_sinistre(request, pk):
     sinistre.save()
 
     idemp = sinistre.employe_id
-    messages.success(request, "sinistre supprimé", "danger")
+    messages.success(request, "sinistre supprimé")
     return redirect(reverse('sinistre_show', args=[idemp]))

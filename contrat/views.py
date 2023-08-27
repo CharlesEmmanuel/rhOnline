@@ -38,7 +38,7 @@ def add_contrat(request, pk):
 
             if not request.POST['contratype'] and not request.POST['debutcontrat']:
 
-                messages.error(request, "Ajout de Contrat Échouée", "danger")
+                messages.error(request, "Ajout de Contrat Échouée")
             else:
 
                 typecontrat = request.POST['contratype']
@@ -63,7 +63,7 @@ def add_contrat(request, pk):
 
                 # Code d'ajout du contrat
 
-                messages.success(request, "Contrat Enrégistré", "success")
+                messages.success(request, "Contrat Enrégistré")
                 return redirect('contrat_liste_emp')
         else:
             context = {
@@ -100,13 +100,13 @@ def edit_contrat(request, pk):
             employe = Employe.objects.get(id=contrat.employe_id)
 
         except contrat.DoesNotExist:
-            messages.success(request, "Contrat n'existe pas")
+            messages.error(request, "Contrat n'existe pas")
 
         if request.method == 'POST':
 
             if not request.POST['contratype'] and not request.POST['debutcontrat']:
 
-                messages.error(request, "Mise à jour de Contrat Échouée", "danger")
+                messages.error(request, "Mise à jour de Contrat Échouée")
             else:
 
                 typecontrat = request.POST['contratype']
@@ -129,7 +129,7 @@ def edit_contrat(request, pk):
 
                 idemp = employe.pk
 
-                messages.success(request, "Modification Effectuée", "success")
+                messages.success(request, "Modification Effectuée")
                 return redirect(reverse('contrat_show',args=[idemp]))
 
         else:

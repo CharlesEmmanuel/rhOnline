@@ -13,19 +13,11 @@
 {% endblock %}
 {% block body %}
 
-
 <div class="main-content">
     <section class="section">
         <div class="section-header">
             <h1>Lieux D'emploi</h1>
-
         </div>
-
-{% if messages %}
-{% for message in messages%}
-        <div class="alert alert-{{message.tags}}">{{message}}.</div>
-{%endfor%}
-{% endif %}
 
         <div class="section-body">
             <div class="row">
@@ -78,7 +70,7 @@
                                                 <div class="custom-checkbox custom-control">
                                                     <input type="checkbox" data-checkboxes="mygroup"
                                                            class="custom-control-input" id="checkbox-{{i.id}}">
-                                                    <label for="checkbox-{{i.id}}" class="custom-control-label">&nbsp;</label>
+                                                    <label for="checkbox-{{i.id}}" class="custom-control-label"> &nbsp;</label>
                                                 </div>
                                             </td>
                                             <td class="text-center">{{ i.name }}</td>
@@ -86,7 +78,7 @@
 
                                             <td class="text-center">
                                                 <a href="{% url 'edit_liemploi' i.id %}" class="btn btn-secondary">Modifier</a>
-                                                <a href="{% url 'delete_liemploi' i.id %}" class="btn btn-danger">Supprimer</a>
+                                                <a href="{% url 'delete_liemploi' i.id %}" class="btn btn-danger swal-6">Supprimer</a>
                                             </td>
 
                                         </tr>
@@ -112,10 +104,9 @@
 <!-- Page Specific JS File -->
 <script src="{% static '' %}js/page/modules-datatables.js"></script>
 
-<!-- JS Libraies -->
-<script src="{% static '' %}assets/modules/izitoast/js/iziToast.min.js"></script>
-
-<!-- Page Specific JS File -->
-<script src="{% static '' %}js/page/modules-toastr.js"></script>
+<script src="{% static '' %}assets/modules/sweetalert/sweetalert.min.js"></script>
+<script>
+    {% include 'panel/sweetalert_conditions/sweetalert.html' %}
+</script>
 
 {%endblock%}

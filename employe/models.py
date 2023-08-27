@@ -202,7 +202,6 @@ class Employe(models.Model):
 
     def listcontrats(self):
         contrats = self.contrat.filter(soft_deleting=False).count()
-
         return contrats
 
     def getGenre(self):

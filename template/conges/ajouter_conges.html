@@ -23,12 +23,6 @@
             </div>
         </div>
 
-        {% if messages %}
-        {% for message in messages%}
-        <div class="alert alert-{{message.tags}}">{{message}}.</div>
-        {%endfor%}
-        {% endif %}
-
         <div class="section-body">
             {% include 'panel/background_image_card.html' %}
 
@@ -112,8 +106,9 @@
 <script src="{% static '' %}js/page/forms-advanced-forms.js"></script>
 
 <!-- JS Libraies -->
-<script src="{% static '' %}assets/modules/izitoast/js/iziToast.min.js"></script>
-
-<!-- Page Specific JS File -->
+<script src="{% static '' %}assets/modules/sweetalert/sweetalert.min.js"></script>
+<script>
+    {% include 'panel/sweetalert_conditions/sweetalert.html' %}
+</script>
 
 {%endblock%}

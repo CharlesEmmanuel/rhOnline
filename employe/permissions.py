@@ -28,7 +28,7 @@ def access_permission(request):
 
 def show_permission(request, pk):
     try:
-        employe = Employe.objects.get(id=pk)
+        employe = Employe.objects.get(id=pk) 
         account = employe.account
         if request.user.is_authenticated and request.user.is_admin:
             return request.user.is_authenticated
