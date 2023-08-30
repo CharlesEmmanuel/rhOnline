@@ -35,7 +35,7 @@ def login_user(request):
                 # return render(request, 'dashboard/menu.html')
             else:
                 print("Non Connecté")
-                messages.error(request, "Email ou mot de passe incorrect",)
+                messages.error(request, "Email ou mot de passe incorrect")
                 return redirect("login")
 
     return render(request, 'home/login.html')
