@@ -268,7 +268,12 @@ class EmployeCreateView(CreateView):
     }
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, self.context)
+        context = {
+            'departements': Departement.objects.filter(soft_deleting=False),
+            'lieuemp': LieuEmploi.objects.filter(soft_deleting=False),
+            'postes': Poste.objects.filter(soft_deleting=False),
+        }
+        return render(request, 'employe/ajouter_employe.html', context)
 
     def post(self, request, *args, **kwargs):
         self.object = None
