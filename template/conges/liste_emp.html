@@ -62,24 +62,17 @@
 
 
                                             {% if i.listconges > 0 %}
-                                            <a href="{% url 'contrat_show' i.id %}" class="btn btn-primary"
+                                            <a href="{% url 'conges_show' i.id %}" class="btn btn-primary"
                                                title="Liste Congés">
-                                                <i class="fas fa-file-contract"></i>
+                                                <i class="fas fa-calendar-alt"></i>
                                                 <span class="badge badge-transparent">{{i.listconges}}</span>
                                             </a>
                                             {% else %}
                                             <a href="#"
-                                               class="btn btn-primary disabled" title="Liste Des Congés"> <i
-                                                    class="fas fa-file-contract"></i> </a>
-                                            {% endif %}
-
-
-
-
-
-                                            <a href="{% url 'conges_show' i.id %}" class="btn btn-primary" title="Liste congés">
+                                               class="btn btn-primary disabled" title="Liste Des Congés">
                                                 <i class="fas fa-calendar-alt"></i>
                                             </a>
+                                            {% endif %}
 
                                         </td>
                                     </tr>

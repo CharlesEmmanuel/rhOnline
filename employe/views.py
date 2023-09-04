@@ -310,10 +310,6 @@ class EmployeCreateView(CreateView):
             nbreenf = request.POST['enfants']
             numurgence = request.POST['casurgence']
 
-            # print("valeur de l'image....")
-            # print(request.POST['fichier'])
-
-
             employe = Employe()
 
             account = Account.objects.create_user(nom, prenom, email, user_type=user_type, password=passwd)
@@ -348,7 +344,7 @@ class EmployeCreateView(CreateView):
 # Fonction listing des employes
 @login_required(login_url="login")
 def liste_emp(request):
-    employe_list = Employe.objects.filter(soft_deleting=False)
+    employe_list = Employe.objects.filter(soft_deleting=False).order_by('name')
     context = {
         'listing': employe_list
     }
@@ -432,6 +428,10 @@ def edit_employe(request, pk):
             employe.statutmat = statutmat
             employe.nbrechild = nbreenf
             employe.contacturgence = numurgence
+
+            print(str(request.FILES['fichier']))
+            employe.photoemp = request.FILES['fichier']
+
             employe.save()
 
         messages.success(request, "Modification Effectuée")

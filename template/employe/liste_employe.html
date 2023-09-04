@@ -38,12 +38,21 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Employés &nbsp; &nbsp;
-                                <a href="{% url 'create_employe' %}" class="btn btn-success" title="Ajouter Employé"
-                                            role="button"
-                                            aria-pressed="true">
-                                <i class="fas fa-user-plus"></i>
-                            </a></h4>
+                            <h4 class="">
+                                <span>
+                                    Employés &nbsp; &nbsp;
+                                    <a href="{% url 'create_employe' %}" class="btn btn-success" title="Ajouter Employé"
+                                       role="button"
+                                       aria-pressed="true">
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+                                </span>
+                                <span class="alert alert-light" style="margin-left:300px !important">
+                                    <i class="far fa-lightbulb"></i>
+                                    Infos : Cliquez sur le nom pour voir la fiche de l'employé
+                                </span>
+                            </h4>
+
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -64,7 +73,7 @@
                                     <tr>
 
                                         <td class="text-center">
-                                            <img width="35"
+                                            <img width="45"
                                                  alt="image"
                                                  src="{%if i.photoemp.url != 0 %} {{ i.photoemp.url}} {%else%} {% static '' %}assets/img/avatar/photo_default-2.jpg{%endif%}"
                                                  class="rounded-circle mr-1">
@@ -127,6 +136,9 @@
 <script src="{% static '' %}assets/modules/sweetalert/sweetalert.min.js"></script>
 <script>
     {% include 'panel/sweetalert_conditions/sweetalert.html' %}
+
+
+
 </script>
 
 {%endblock%}

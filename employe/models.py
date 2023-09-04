@@ -203,6 +203,12 @@ class Employe(models.Model):
     def listcontrats(self):
         contrats = self.contrat.filter(soft_deleting=False).count()
         return contrats
+    def listconges(self):
+        conges = self.conges.filter(soft_deleting=False).count()
+        return conges
+    def listsinistres(self):
+        sinistres = self.sinistre.filter(soft_deleting=False).count()
+        return sinistres
 
     def getGenre(self):
         if (self.genre == 'H'):
