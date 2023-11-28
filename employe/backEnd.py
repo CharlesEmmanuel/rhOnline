@@ -9,13 +9,12 @@ detector = cv2.CascadeClassifier(BASE_DIR + '/employe/haarcascade_frontalface_de
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 # predictor = dlib.shape_predictor(BASE_DIR + '/employe/shape_predictor_68_face_landmarks.dat')
 
-
 class FaceRecognition:
 
     def init(self):
         self.font = cv2.FONT_HERSHEY_SIMPLEX
 
-    def faceDetect(self, Entry1, ):
+    def faceDetect(self, Entry1):
         print("Etape 1")
         face_id = Entry1
         # face_name = Entry2
@@ -33,9 +32,11 @@ class FaceRecognition:
 
         count = 0
 
+
         while (True):
 
             ret, img = cam.read()
+
             print("Etape 4 while")
 
             # img = cv2.flip(img, -1) # flip video image vertically
@@ -49,7 +50,7 @@ class FaceRecognition:
                 count += 1
 
                 # Save the captured image into the datasets folder
-                if count < 10:
+                if count < 7:
 
                     cv2.imwrite(BASE_DIR + '/employe/dataset/User.' + str(face_id) + '.' + str(count) + ".jpg",
                                 gray[y:y + h, x:x + w])
@@ -142,7 +143,7 @@ class FaceRecognition:
 
 
                 face_id, confidence = recognizer.predict(gray[y:y + h, x:x + w])
-                if (confidence > 100):
+                if (confidence > 50):
 
                     name = 'Detected'
                     print("Reconnu ")
@@ -181,4 +182,3 @@ class FaceRecognition:
 
     def get_temperature(self):
         return round(np.random.uniform(36.0, 37.5), 1)
-

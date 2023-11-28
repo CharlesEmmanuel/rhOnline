@@ -27,5 +27,7 @@ urlpatterns = [
         path('conges/', include('conges.urls')),
         path('sinistre/', include('sinistre.urls')),
         path('presence/', include('presence.urls')),
+        path('api-auth/', include('rest_framework.urls')),
+        path('api-all/', include('api.urls'))
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

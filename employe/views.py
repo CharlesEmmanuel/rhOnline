@@ -457,10 +457,7 @@ def addFace(face_id):
 
 # @login_required(login_url="login")
 def scanFace(request, face_id):
-    face_id = face_id
-    facerecognition.faceDetect(face_id)
-    facerecognition.trainFace()
-    return redirect('liste_employe')
+    return addFace(face_id)
 
 
 @login_required(login_url="login")
